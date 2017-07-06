@@ -1,8 +1,0 @@
-{
-  "parent": "block/orientable",
-  "textures": {
-    "top": "inspection:blocks/machine_top",
-    "front": "inspection:blocks/slot_front",
-    "side": "inspection:blocks/machine_side"
-  }
-}
