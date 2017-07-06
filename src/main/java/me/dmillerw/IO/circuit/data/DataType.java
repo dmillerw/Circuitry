@@ -1,5 +1,6 @@
 package me.dmillerw.io.circuit.data;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagDouble;
 
@@ -35,6 +36,20 @@ public enum DataType {
     public static Object getValueFromNbtTag(DataType dataType, NBTBase value) {
         switch (dataType) {
             case NUMBER: return ((NBTTagDouble)value).getDouble();
+            default: return null;
+        }
+    }
+
+    public static void writeValueToByteBuf(DataType dataType, Object value, ByteBuf buf) {
+        switch (dataType) {
+            case NUMBER: buf.writeDouble(((Number)value).doubleValue());
+            default: return;
+        }
+    }
+
+    public static Object readValueFromByteBuf(DataType dataType, ByteBuf buf) {
+        switch (dataType) {
+            case NUMBER: return buf.readDouble();
             default: return null;
         }
     }

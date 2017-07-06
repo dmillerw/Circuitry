@@ -10,7 +10,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.FMLLog;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -60,8 +59,6 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
     private Map<UUID, Map<String, String>> listeningPorts = Maps.newHashMap();
 
     public void registerListener(TileToolContainer toolContainer, String output, String input) {
-        FMLLog.info("Registering listener: " + getName() + " is listening to " + toolContainer.getName() + "|" + output + " on port " + input);
-
         Map<String, String> map = listeningPorts.get(toolContainer.uuid);
         if (map == null) map = Maps.newHashMap();
         map.put(output, input);
@@ -218,31 +215,33 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
     }
 
     public final void updateInput(String port, Object value) {
-        if (world.isRemote)
-            return;
-
         Port p = inputs.get(port);
-        if (p == null)
+        if (p == null) {
             throw new RuntimeException();
+        }
 
         p.value = value;
 
         inputs.put(port, p);
 
+        if (world.isRemote)
+            return;
+
         triggerInputChange(port, value);
     }
 
     public final void updateOutput(String port, Object value) {
-        if (world.isRemote)
-            return;
-
         Port p = outputs.get(port);
-        if (p == null)
+        if (p == null) {
             throw new RuntimeException();
+        }
 
         p.value = value;
 
         outputs.put(port, p);
+
+        if (world.isRemote)
+            return;
 
         grid.propagateOutputUpdate(this, port, value);
     }
@@ -307,8 +306,6 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
                 .map(m -> ((TileToolContainer)m).getUuid())
                 .collect(Collectors.toSet());
 
-        FMLLog.info("Grid updated, now contains " + grid.getMembers().size() + " members");
-
         Iterator<UUID> listeners = listeningPorts.keySet().iterator();
         while (listeners.hasNext()) {
             UUID uuid = listeners.next();
@@ -319,12 +316,9 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
                 // Key is the port we were listening to, value is the port we're listening from
                 Map<String, String> connection = listeningPorts.get(uuid);
 
-                FMLLog.info("Removing " + uuid);
-
                 connection.values().forEach(name -> {
                     Port port = getInput(name);
                     updateInput(name, port.type.zero);
-                    FMLLog.info("Setting port " + name + " to zero");
                 });
 
                 listeners.remove();
