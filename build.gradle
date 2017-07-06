@@ -1,0 +1,54 @@
+buildscript {
+	repositories {
+		jcenter()
+		maven { url "http://files.minecraftforge.net/maven" }
+	}
+	dependencies {
+		classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
+	}
+}
+apply plugin: "net.minecraftforge.gradle.forge"
+
+version = mod_version
+group   = "me.dmillerw.io"
+archivesBaseName = "${project.projectDir.name}-${minecraft_version}"
+
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
+compileJava { sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8 }
+
+minecraft {
+	version  = "${minecraft_version}-${forge_version}"
+	mappings = minecraft_mappings
+	runDir   = "run"
+	
+	replace "@VERSION@", project.version
+}
+
+processResources {
+	inputs.property "mod_version", project.version
+	inputs.property "minecraft_version", project.minecraft.version
+	
+	from (sourceSets.main.resources.srcDirs) {
+		include "mcmod.info"
+		expand "mod_version":project.version, "minecraft_version":project.minecraft.version
+	}
+	
+	from (sourceSets.main.resources.srcDirs) {
+		exclude "mcmod.info"
+	}
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+	from sourceSets.main.allSource
+	classifier = "sources"
+}
+
+task deobfJar(type: Jar) {
+	from sourceSets.main.output
+	classifier = "deobf"
+}
+
+artifacts {
+	archives sourcesJar
+	archives deobfJar
+}
