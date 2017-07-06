@@ -113,8 +113,8 @@ public class GuiLinking extends GuiScreen {
             if (pos != null) {
                 TileToolContainer tile = (TileToolContainer) mc.world.getTileEntity(pos);
                 if (tile != null) {
-                    fontRendererObj.drawString(tile.getName(), guiLeft + 182, guiTop + 8, 0xFFFFFF);
-                    fontRendererObj.drawString("(" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + ")", guiLeft + 182, guiTop + 28, 0xFFFFFF);
+                    fontRenderer.drawString(tile.getName(), guiLeft + 182, guiTop + 8, 0xFFFFFF);
+                    fontRenderer.drawString("(" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + ")", guiLeft + 182, guiTop + 28, 0xFFFFFF);
                 }
             }
         }

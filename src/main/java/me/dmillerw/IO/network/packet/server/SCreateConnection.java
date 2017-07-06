@@ -43,7 +43,7 @@ public class SCreateConnection implements IMessage {
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(new Runnable() {
                 @Override
                 public void run() {
-                    World world = ctx.getServerHandler().playerEntity.world;
+                    World world = ctx.getServerHandler().player.world;
 
                     TileToolContainer source = (TileToolContainer) world.getTileEntity(message.sourcePosition);
                     if (source == null) return;

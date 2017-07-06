@@ -3,6 +3,7 @@ package me.dmillerw.io.block;
 import me.dmillerw.io.block.item.ItemGateContainer;
 import me.dmillerw.io.block.tile.circuit.BlockConstantValue;
 import me.dmillerw.io.block.tile.circuit.BlockRedstoneEmitter;
+import me.dmillerw.io.block.tile.circuit.BlockRedstoneReceiver;
 import me.dmillerw.io.lib.ModInfo;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -34,6 +35,10 @@ public class ModBlocks {
     @GameRegistry.ObjectHolder(ModInfo.MOD_ID + ":gate")
     public static final ItemGateContainer gate_item = null;
 
+    public static final BlockRedstoneReceiver redstone_receiver = null;
+    @GameRegistry.ObjectHolder(ModInfo.MOD_ID + ":redstone_receiver")
+    public static final ItemBlock redstone_receiver_item = null;
+
     @Mod.EventBusSubscriber
     public static class Loader {
 
@@ -43,7 +48,8 @@ public class ModBlocks {
                     new BlockCable().setRegistryName(ModInfo.MOD_ID, "cable"),
                     new BlockRedstoneEmitter().setRegistryName(ModInfo.MOD_ID, "redstone_emitter"),
                     new BlockConstantValue().setRegistryName(ModInfo.MOD_ID, "constant_value"),
-                    new BlockGateContainer().setRegistryName(ModInfo.MOD_ID, "gate")
+                    new BlockGateContainer().setRegistryName(ModInfo.MOD_ID, "gate"),
+                    new BlockRedstoneReceiver().setRegistryName(ModInfo.MOD_ID, "redstone_receiver")
             );
         }
 
@@ -53,7 +59,8 @@ public class ModBlocks {
                     new ItemBlock(ModBlocks.cable).setRegistryName(ModInfo.MOD_ID, "cable"),
                     new ItemBlock(ModBlocks.redstone_emitter).setRegistryName(ModInfo.MOD_ID, "redstone_emitter"),
                     new ItemBlock(ModBlocks.constant_value).setRegistryName(ModInfo.MOD_ID, "constant_value"),
-                    new ItemGateContainer(ModBlocks.gate).setRegistryName(ModInfo.MOD_ID, "gate")
+                    new ItemGateContainer(ModBlocks.gate).setRegistryName(ModInfo.MOD_ID, "gate"),
+                    new ItemBlock(ModBlocks.redstone_receiver).setRegistryName(ModInfo.MOD_ID, "redstone_receiver")
             );
         }
     }

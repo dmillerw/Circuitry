@@ -11,7 +11,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -47,15 +46,15 @@ public class BlockGateContainer extends BlockToolContainer implements ITileEntit
     }
 
     @Override
-    public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list) {
+    public void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> items) {
         for (BaseGate gate : GateRegistry.INSTANCE.getAllGates()) {
-            ItemStack itemStack = new ItemStack(itemIn);
+            ItemStack itemStack = new ItemStack(this);
 
             NBTTagCompound tagCompound = new NBTTagCompound();
             tagCompound.setString("Gate", gate.getKey());
             itemStack.setTagCompound(tagCompound);
 
-            list.add(itemStack);
+            items.add(itemStack);
         }
     }
 

@@ -1,6 +1,5 @@
 package me.dmillerw.io.client.model;
 
-import com.google.common.base.Function;
 import com.google.common.collect.ImmutableSet;
 import me.dmillerw.io.block.BlockCable;
 import me.dmillerw.io.block.property.ConnectionType;
@@ -25,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 import static me.dmillerw.io.block.BlockCable.*;
 
@@ -48,7 +48,7 @@ public class CableModel implements IBakedModel {
         for (int e = 0; e < format.getElementCount(); e++) {
             switch (format.getElement(e).getUsage()) {
                 case POSITION:
-                    builder.put(e, (float) vertex.xCoord, (float) vertex.yCoord, (float) vertex.zCoord, 1.0f);
+                    builder.put(e, (float) vertex.x, (float) vertex.y, (float) vertex.z, 1.0f);
                     break;
                 case COLOR:
                     builder.put(e, 1.0f, 1.0f, 1.0f, 1.0f);
@@ -61,7 +61,7 @@ public class CableModel implements IBakedModel {
                         break;
                     }
                 case NORMAL:
-                    builder.put(e, (float) normal.xCoord, (float) normal.yCoord, (float) normal.zCoord, 0f);
+                    builder.put(e, (float) normal.x, (float) normal.y, (float) normal.z, 0f);
                     break;
                 default:
                     builder.put(e);

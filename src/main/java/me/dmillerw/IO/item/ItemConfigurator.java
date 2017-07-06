@@ -7,6 +7,7 @@ import me.dmillerw.io.block.tile.core.TileToolContainer;
 import me.dmillerw.io.circuit.data.DataType;
 import me.dmillerw.io.circuit.grid.ConnectivityGrid;
 import me.dmillerw.io.lib.ModInfo;
+import me.dmillerw.io.lib.ModTab;
 import me.dmillerw.io.network.PacketHandler;
 import me.dmillerw.io.network.packet.client.COpenConfiguratorGui;
 import net.minecraft.entity.player.EntityPlayer;
@@ -35,6 +36,8 @@ public class ItemConfigurator extends Item {
         setMaxDamage(0);
 
         setUnlocalizedName(ModInfo.MOD_ID + ":configurator");
+
+        setCreativeTab(ModTab.TAB);
     }
 
     @Override

@@ -88,7 +88,7 @@ public class BlockCable extends BlockGridMember implements ITileEntityProvider {
         if (tile != null) {
             for (EnumFacing facing : EnumFacing.VALUES) {
                 if (tile.isConnectedTo(facing)) {
-                    aabb = aabb.addCoord(0.3 * facing.getFrontOffsetX(), 0.3 * facing.getFrontOffsetY(), 0.3 * facing.getFrontOffsetZ());
+                    aabb = aabb.expand(0.3 * facing.getFrontOffsetX(), 0.3 * facing.getFrontOffsetY(), 0.3 * facing.getFrontOffsetZ());
                 }
             }
         }
@@ -99,7 +99,7 @@ public class BlockCable extends BlockGridMember implements ITileEntityProvider {
     @Nullable
     @Override
     public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
-        return FULL_BLOCK_AABB.expandXyz(-.25);
+        return FULL_BLOCK_AABB.expand(-.25, -.25, -.25);
     }
 
     @Override

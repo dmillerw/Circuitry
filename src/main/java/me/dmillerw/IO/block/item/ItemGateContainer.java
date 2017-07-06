@@ -3,10 +3,13 @@ package me.dmillerw.io.block.item;
 import me.dmillerw.io.circuit.gate.BaseGate;
 import me.dmillerw.io.circuit.gate.GateRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -19,7 +22,7 @@ public class ItemGateContainer extends ItemBlock {
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         if (stack.getTagCompound() == null)
             return;
 
