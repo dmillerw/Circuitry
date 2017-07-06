@@ -2,6 +2,7 @@ package me.dmillerw.io.network;
 
 import me.dmillerw.io.lib.ModInfo;
 import me.dmillerw.io.network.packet.client.COpenConfiguratorGui;
+import me.dmillerw.io.network.packet.client.CUpdatePorts;
 import me.dmillerw.io.network.packet.server.SCreateConnection;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -45,7 +46,9 @@ public class PacketHandler {
 
     static {
         registerServerMessage(SCreateConnection.class, SCreateConnection.Handler.class);
+
         registerClientMessage(COpenConfiguratorGui.class, COpenConfiguratorGui.Handler.class);
+        registerClientMessage(CUpdatePorts.class, CUpdatePorts.Handler.class);
     }
 
     public static void sendToAllWatching(IMessage message, World world, BlockPos pos) {
