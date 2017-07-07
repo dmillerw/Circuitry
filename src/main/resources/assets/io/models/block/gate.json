@@ -1,0 +1,8 @@
+{
+  "parent": "block/cube_bottom_top",
+  "textures": {
+    "top": "io:blocks/gate_top",
+    "bottom": "io:blocks/gate_top",
+    "side": "io:blocks/gate_side"
+  }
+}
