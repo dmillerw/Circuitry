@@ -7,6 +7,7 @@ import me.dmillerw.io.circuit.data.Port;
 import me.dmillerw.io.circuit.grid.ConnectivityGrid;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -288,7 +289,7 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
     }
 
     @Override
-    public boolean canConnectTo(IGridMember otherMember) {
+    public boolean canConnectTo(IGridMember otherMember, EnumFacing facing) {
         return true;
     }
 

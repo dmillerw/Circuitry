@@ -39,6 +39,10 @@ public class ModBlocks {
     @GameRegistry.ObjectHolder(ModInfo.MOD_ID + ":redstone_receiver")
     public static final ItemBlock redstone_receiver_item = null;
 
+    public static final BlockScreen screen = null;
+    @GameRegistry.ObjectHolder(ModInfo.MOD_ID + ":screen")
+    public static final ItemBlock screen_item = null;
+
     @Mod.EventBusSubscriber
     public static class Loader {
 
@@ -49,7 +53,8 @@ public class ModBlocks {
                     new BlockRedstoneEmitter().setRegistryName(ModInfo.MOD_ID, "redstone_emitter"),
                     new BlockConstantValue().setRegistryName(ModInfo.MOD_ID, "constant_value"),
                     new BlockGateContainer().setRegistryName(ModInfo.MOD_ID, "gate"),
-                    new BlockRedstoneReceiver().setRegistryName(ModInfo.MOD_ID, "redstone_receiver")
+                    new BlockRedstoneReceiver().setRegistryName(ModInfo.MOD_ID, "redstone_receiver"),
+                    new BlockScreen().setRegistryName(ModInfo.MOD_ID, "screen")
             );
         }
 
@@ -60,7 +65,8 @@ public class ModBlocks {
                     new ItemBlock(ModBlocks.redstone_emitter).setRegistryName(ModInfo.MOD_ID, "redstone_emitter"),
                     new ItemBlock(ModBlocks.constant_value).setRegistryName(ModInfo.MOD_ID, "constant_value"),
                     new ItemGateContainer(ModBlocks.gate).setRegistryName(ModInfo.MOD_ID, "gate"),
-                    new ItemBlock(ModBlocks.redstone_receiver).setRegistryName(ModInfo.MOD_ID, "redstone_receiver")
+                    new ItemBlock(ModBlocks.redstone_receiver).setRegistryName(ModInfo.MOD_ID, "redstone_receiver"),
+                    new ItemBlock(ModBlocks.screen).setRegistryName(ModInfo.MOD_ID, "screen")
             );
         }
     }

@@ -1,0 +1,27 @@
+{
+  "variants": {
+    "facing=up": {
+      "model": "io:screen_vertical",
+      "x": 270
+    },
+    "facing=down": {
+      "model": "io:screen_vertical",
+      "x": 90
+    },
+    "facing=north": {
+      "model": "io:screen"
+    },
+    "facing=south": {
+      "model": "io:screen",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "io:screen",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "io:screen",
+      "y": 90
+    }
+  }
+}

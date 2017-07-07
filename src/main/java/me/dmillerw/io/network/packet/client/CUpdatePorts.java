@@ -15,6 +15,16 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  */
 public class CUpdatePorts implements IMessage {
 
+    public static CUpdatePorts from(TileToolContainer tile) {
+        CUpdatePorts packet = new CUpdatePorts();
+
+        packet.target = tile.getPosition();
+        packet.inputs = tile.inputs.values().toArray(new Port[0]);
+        packet.outputs = tile.outputs.values().toArray(new Port[0]);
+
+        return packet;
+    }
+
     private static void writePorts(ByteBuf buf, Port[] ports) {
         if (ports.length > 0) {
             buf.writeBoolean(true);

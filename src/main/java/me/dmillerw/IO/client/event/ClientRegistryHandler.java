@@ -22,7 +22,9 @@ public class ClientRegistryHandler {
     @SubscribeEvent
     public static void registerModels(ModelRegistryEvent event) {
         forceState(ModBlocks.cable, new ModelResourceLocation(ModInfo.MOD_ID + ":cable"));
+
         registerItemModel(ModBlocks.cable_item);
+        registerItemModel(ModBlocks.screen_item);
     }
 
     private static void forceState(Block block, ModelResourceLocation location) {

@@ -1,11 +1,11 @@
 package me.dmillerw.io.block.tile;
 
+import me.dmillerw.io.api.IGridMember;
 import me.dmillerw.io.block.BlockCable;
 import me.dmillerw.io.block.ModBlocks;
 import me.dmillerw.io.block.property.ConnectionType;
 import me.dmillerw.io.block.tile.core.TileCore;
 import me.dmillerw.io.circuit.grid.ConnectivityGrid;
-import me.dmillerw.io.api.IGridMember;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -22,6 +22,7 @@ import java.util.Arrays;
 public class TileCable extends TileCore implements ITickable, IGridMember {
 
     private ConnectivityGrid grid;
+
     private ConnectionType[] connectionMap = new ConnectionType[6];
 
     public TileCable() {
@@ -113,8 +114,8 @@ public class TileCable extends TileCore implements ITickable, IGridMember {
     }
 
     @Override
-    public boolean canConnectTo(IGridMember otherMember) {
-        return true;
+    public boolean canConnectTo(IGridMember otherMember, EnumFacing facing) {
+        return isConnectedTo(facing);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package me.dmillerw.io.item;
 
 import me.dmillerw.io.block.tile.core.TileToolContainer;
-import me.dmillerw.io.circuit.data.Port;
 import me.dmillerw.io.lib.ModInfo;
 import me.dmillerw.io.lib.ModTab;
 import me.dmillerw.io.network.GuiHandler;
@@ -38,12 +37,12 @@ public class ItemDebugger extends Item {
         TileEntity tile = world.getTileEntity(pos);
         if (tile != null && tile instanceof TileToolContainer) {
             if (!world.isRemote) {
-                CUpdatePorts packet = new CUpdatePorts();
-                packet.target = pos;
-                packet.inputs = ((TileToolContainer) tile).inputs.values().toArray(new Port[0]);
-                packet.outputs = ((TileToolContainer) tile).outputs.values().toArray(new Port[0]);
-
-                PacketHandler.INSTANCE.sendTo(packet, (EntityPlayerMP) player);
+                if (player.isSneaking()) {
+                    System.out.println(((TileToolContainer) tile).getGrid().uuid);
+                    System.out.println(((TileToolContainer) tile).getGrid().getMembers().size());
+                    return EnumActionResult.SUCCESS;
+                }
+                PacketHandler.INSTANCE.sendTo(CUpdatePorts.from((TileToolContainer) tile), (EntityPlayerMP) player);
             }
 
             GuiHandler.Gui.DEBUGGER.openGui(player, pos);

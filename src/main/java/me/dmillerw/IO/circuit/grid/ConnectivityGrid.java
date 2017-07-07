@@ -89,7 +89,7 @@ public class ConnectivityGrid {
             if (gridMember.getMemberType() == MemberType.NODE && ((IGridMember) tile).getMemberType() == MemberType.NODE)
                 continue;
 
-            if (gridMember.canConnectTo((IGridMember) tile))
+            if (gridMember.canConnectTo((IGridMember) tile, facing))
                 neighbors.add((IGridMember) tile);
         }
 
@@ -253,6 +253,7 @@ public class ConnectivityGrid {
     }
 
     public void propagateOutputUpdate(TileToolContainer origin, String port, Object value) {
+        System.out.println("");
         members.values().forEach(m -> {
             if (m.getMemberType() == MemberType.NODE) {
                 if (m instanceof TileToolContainer) {
