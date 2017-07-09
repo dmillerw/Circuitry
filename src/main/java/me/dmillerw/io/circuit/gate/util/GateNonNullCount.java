@@ -1,4 +1,4 @@
-package me.dmillerw.io.circuit.gate.arithmatic;
+package me.dmillerw.io.circuit.gate.util;
 
 import me.dmillerw.io.block.tile.TileGateContainer;
 import me.dmillerw.io.circuit.data.DataType;
@@ -10,12 +10,12 @@ import java.util.Arrays;
 /**
  * @author dmillerw
  */
-public class GateAdd extends BaseGate {
+public class GateNonNullCount extends BaseGate {
 
-    private static final String[] INPUTS = new String[] { "A", "B", "C", "D", "E", "F", "G", "H" };
+    private static final String[] INPUTS = new String[]{"A", "B", "C", "D", "E", "F", "G", "H"};
 
-    public GateAdd() {
-        super("add", Category.ARITHMATIC);
+    public GateNonNullCount() {
+        super("non_null_count", Category.ARITHMATIC);
     }
 
     @Override
@@ -26,10 +26,10 @@ public class GateAdd extends BaseGate {
 
     @Override
     public void calculateOutput(TileGateContainer parentTile) {
-        final double[] bucket = {0};
+        final int[] bucket = {0};
         Arrays.stream(INPUTS).forEach(k -> {
             Port port = parentTile.getInput(k);
-            bucket[0] += port.value.getNumber().doubleValue();
+            if (!port.value.isNull()) bucket[0]++;
         });
 
         parentTile.updateOutput("Out", bucket[0]);

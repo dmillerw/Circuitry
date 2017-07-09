@@ -3,6 +3,7 @@ package me.dmillerw.io.circuit.gate;
 import com.google.common.collect.Maps;
 import me.dmillerw.io.circuit.gate.arithmatic.GateAdd;
 import me.dmillerw.io.circuit.gate.util.GateConstantValue;
+import me.dmillerw.io.circuit.gate.util.GateNonNullCount;
 
 import java.util.Collection;
 import java.util.Map;
@@ -16,6 +17,7 @@ public class GateRegistry {
     static {
         INSTANCE.register(new GateAdd());
         INSTANCE.register(new GateConstantValue());
+        INSTANCE.register(new GateNonNullCount());
     }
 
     private Map<String, BaseGate> gates = Maps.newHashMap();

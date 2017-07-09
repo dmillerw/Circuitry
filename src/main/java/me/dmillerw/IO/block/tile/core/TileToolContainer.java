@@ -1,9 +1,13 @@
 package me.dmillerw.io.block.tile.core;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Maps;
 import me.dmillerw.io.api.IGridMember;
 import me.dmillerw.io.circuit.data.DataType;
+import me.dmillerw.io.circuit.data.NullValue;
 import me.dmillerw.io.circuit.data.Port;
+import me.dmillerw.io.circuit.data.Value;
 import me.dmillerw.io.circuit.grid.ConnectivityGrid;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -11,6 +15,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -40,6 +45,7 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
 
     private boolean initialized = false;
 
+    // Stored in NBT on world load, and used in place of zero values once a port is registered
     private Map<String, Port> cachedInputs = Maps.newHashMap();
     private Map<String, Port> cachedOutputs = Maps.newHashMap();
 
@@ -51,27 +57,27 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
      * listen to one other port on the network, but another port on the network can be listened to by multiple
      * ports
      *
-     * Listeners are sorted by a circuit's UUID, and from there stored in a Map where the source output port is the key
-     * and our port that's listening is the value
+     * Listeners are stored so that an input can only ever expect to receive an update from one other port on the network
+     * With the main key of the Map being our input port, and the value being a Pair defining which circuit and output
+     * we're listening to
+     *
+     * Map is also a BiMap, to allow for easier lookup of what (if any) input is listening for a specifric output
      *
      * Registering a listener will also immediately send the newly registered listener the last value available from
      * the output port
      */
-    private Map<UUID, Map<String, String>> listeningPorts = Maps.newHashMap();
+    private BiMap<String, Pair<UUID, String>> listeners = HashBiMap.create();
 
     public void registerListener(TileToolContainer toolContainer, String output, String input) {
-        Map<String, String> map = listeningPorts.get(toolContainer.uuid);
-        if (map == null) map = Maps.newHashMap();
-        map.put(output, input);
-        listeningPorts.put(toolContainer.uuid, map);
+        //TODO: If input is already listening to something
+        listeners.put(input, Pair.of(toolContainer.uuid, output));
 
         this.updateInput(input, toolContainer.getOutput(output).value);
     }
 
     public Port getListeningPort(TileToolContainer toolContainer, String origin) {
-        Map<String, String> ports = listeningPorts.get(toolContainer.uuid);
-        if (ports == null) return null;
-        return inputs.get(ports.get(origin));
+        Pair<UUID, String> pair = Pair.of(toolContainer.getUuid(), origin);
+        return inputs.get(listeners.inverse().get(pair));
     }
 
     public final void setName(String name) {
@@ -141,23 +147,16 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
 
         // Listeners
         NBTTagList listening = new NBTTagList();
-        for (UUID uuid : listeningPorts.keySet()) {
+        for (String input : listeners.keySet()) {
             NBTTagCompound tag = new NBTTagCompound();
 
-            tag.setLong(NBT_KEY_UUID_MOST, uuid.getMostSignificantBits());
-            tag.setLong(NBT_KEY_UUID_LEAST, uuid.getLeastSignificantBits());
+            tag.setString("Input", input);
 
-            NBTTagList list = new NBTTagList();
+            Pair<UUID, String> pair = listeners.get(input);
 
-            Map<String, String> connections = listeningPorts.get(uuid);
-            for (String key : connections.keySet()) {
-                NBTTagCompound tag1 = new NBTTagCompound();
-                tag1.setString(NBT_KEY_OUTPUT, key);
-                tag1.setString(NBT_KEY_INPUT, connections.get(key));
-                list.appendTag(tag1);
-            }
-
-            tag.setTag(NBT_KEY_CONNECTIONS, list);
+            tag.setLong("UuidMost", pair.getLeft().getMostSignificantBits());
+            tag.setLong("UuidLeast", pair.getLeft().getLeastSignificantBits());
+            tag.setString("Output", pair.getRight());
 
             listening.appendTag(tag);
         }
@@ -188,17 +187,12 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
         NBTTagList nbtListening = compound.getTagList(NBT_KEY_LISTENERS, TAG_COMPOUND);
         for (int i=0; i<nbtListening.tagCount(); i++) {
             NBTTagCompound listener = nbtListening.getCompoundTagAt(i);
-            UUID uuid = new UUID(listener.getLong(NBT_KEY_UUID_MOST), listener.getLong(NBT_KEY_UUID_LEAST));
 
-            NBTTagList nbtConnections = listener.getTagList(NBT_KEY_CONNECTIONS, TAG_COMPOUND);
-            Map<String, String> connections = Maps.newHashMap();
+            String input = listener.getString("Input");
+            UUID uuid = new UUID(listener.getLong("UuidMost"), listener.getLong("UuidLeast"));
+            String output = listener.getString("Output");
 
-            for (int j=0; j<nbtConnections.tagCount(); j++) {
-                NBTTagCompound connection = nbtConnections.getCompoundTagAt(j);
-                connections.put(connection.getString(NBT_KEY_OUTPUT), connection.getString(NBT_KEY_INPUT));
-            }
-
-            listeningPorts.put(uuid, connections);
+            listeners.put(input, Pair.of(uuid, output));
         }
     }
 
@@ -215,29 +209,41 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
         return outputs.size() > 0;
     }
 
-    public final void updateInput(String port, Object value) {
+    public final void updateInput(String port, Value rawValue) {
         Port p = inputs.get(port);
         if (p == null) {
             throw new RuntimeException();
         }
 
-        p.value = value;
+        Value value;
+        if (rawValue == null)
+            value = NullValue.NULL;
+        else
+            value = Value.of(p.type, rawValue);
+
+        p.setValue(value);
 
         inputs.put(port, p);
 
         if (world.isRemote)
             return;
 
-        triggerInputChange(port, value);
+        onInputChange(port, value);
     }
 
-    public final void updateOutput(String port, Object value) {
+    public final void updateOutput(String port, Object rawValue) {
         Port p = outputs.get(port);
         if (p == null) {
             throw new RuntimeException();
         }
 
-        p.value = value;
+        Value value;
+        if (rawValue == null)
+            value = NullValue.NULL;
+        else
+            value = Value.of(p.type, rawValue);
+
+        p.setValue(value);
 
         outputs.put(port, p);
 
@@ -249,7 +255,7 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
 
     public final void resetOutputs() {
         for (Port p : outputs.values()) {
-            updateOutput(p.name, p.type.zero);
+            updateOutput(p.name, NullValue.NULL);
         }
     }
 
@@ -257,7 +263,7 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
 
     }
 
-    public void triggerInputChange(String port, Object value) {
+    public void onInputChange(String port, Object value) {
 
     }
 
@@ -307,22 +313,19 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
                 .map(m -> ((TileToolContainer)m).getUuid())
                 .collect(Collectors.toSet());
 
-        Iterator<UUID> listeners = listeningPorts.keySet().iterator();
-        while (listeners.hasNext()) {
-            UUID uuid = listeners.next();
+        Iterator<Pair<UUID, String>> iterator = listeners.values().iterator();
+        while (iterator.hasNext()) {
+            Pair<UUID, String> pair = iterator.next();
 
             // If one of the nodes we're listening to no longer exists, we need to remove it, and ensure that all the
             // ports that were listening to said node have their values reset
-            if (!nodes.contains(uuid)) {
+            if (!nodes.contains(pair.getKey())) {
                 // Key is the port we were listening to, value is the port we're listening from
-                Map<String, String> connection = listeningPorts.get(uuid);
+                String input = listeners.inverse().get(pair);
 
-                connection.values().forEach(name -> {
-                    Port port = getInput(name);
-                    updateInput(name, port.type.zero);
-                });
+                updateInput(input, NullValue.NULL);
 
-                listeners.remove();
+                iterator.remove();
             }
         }
     }

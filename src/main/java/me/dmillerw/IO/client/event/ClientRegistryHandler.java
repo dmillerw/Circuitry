@@ -25,6 +25,7 @@ public class ClientRegistryHandler {
 
         registerItemModel(ModBlocks.cable_item);
         registerItemModel(ModBlocks.screen_item);
+        registerItemModel(ModBlocks.gate_item);
     }
 
     private static void forceState(Block block, ModelResourceLocation location) {

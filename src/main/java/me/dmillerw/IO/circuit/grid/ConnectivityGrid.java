@@ -5,6 +5,7 @@ import com.google.common.collect.Sets;
 import me.dmillerw.io.api.IGridMember;
 import me.dmillerw.io.block.tile.core.TileToolContainer;
 import me.dmillerw.io.circuit.data.Port;
+import me.dmillerw.io.circuit.data.Value;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -252,8 +253,7 @@ public class ConnectivityGrid {
         return checkedMembers;
     }
 
-    public void propagateOutputUpdate(TileToolContainer origin, String port, Object value) {
-        System.out.println("");
+    public void propagateOutputUpdate(TileToolContainer origin, String port, Value value) {
         members.values().forEach(m -> {
             if (m.getMemberType() == MemberType.NODE) {
                 if (m instanceof TileToolContainer) {
