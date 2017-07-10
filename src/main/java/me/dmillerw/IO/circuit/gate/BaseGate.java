@@ -9,7 +9,10 @@ public class BaseGate {
 
     public static enum Category {
 
-        ARITHMATIC;
+        ARITHMATIC,
+        LOGIC,
+        UTIL,
+        TIME;
     }
 
     private String key;
@@ -29,6 +32,10 @@ public class BaseGate {
     }
 
     public void initialize(TileGateContainer parentTile) {
+
+    }
+
+    public void tick(TileGateContainer tileGateContainer, int lifespan) {
 
     }
 

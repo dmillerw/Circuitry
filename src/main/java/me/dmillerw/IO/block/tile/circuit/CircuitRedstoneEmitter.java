@@ -20,7 +20,7 @@ public class CircuitRedstoneEmitter extends TileToolContainer {
     }
 
     @Override
-    public void triggerInputChange(String port, Object value) {
+    public void onInputChange(String port, Object value) {
         if (port.equals(KEY_REDSTONE_LEVEL)) {
             redstoneLevel = ((Number)value).intValue();
 

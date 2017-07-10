@@ -63,7 +63,7 @@ public class Value {
 
     @Override
     public String toString() {
-        if (isType(DataType.NULL))
+        if (value == null || isType(DataType.NULL))
             return "NULL";
         else if (isType(DataType.NUMBER))
             return getNumber().toString();

@@ -18,7 +18,7 @@ public class CircuitConstantValue extends TileToolContainer {
     }
 
     @Override
-    public void triggerInputChange(String port, Object value) {
+    public void onInputChange(String port, Object value) {
         // NO-OP
     }
 }

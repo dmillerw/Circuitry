@@ -11,6 +11,9 @@ import net.minecraft.nbt.NBTTagCompound;
 public class TileGateContainer extends TileToolContainer {
 
     private String gate;
+    private NBTTagCompound state = new NBTTagCompound();
+    private int totalTicks = 0;
+
     public void setGate(String gate) {
         this.gate = gate;
     }
@@ -20,6 +23,7 @@ public class TileGateContainer extends TileToolContainer {
         super.writeToDisk(compound);
 
         compound.setString("Gate", gate);
+        compound.setTag("State", state);
     }
 
     @Override
@@ -27,6 +31,7 @@ public class TileGateContainer extends TileToolContainer {
         super.readFromDisk(compound);
 
         gate = compound.getString("Gate");
+        state = compound.getCompoundTag("State");
     }
 
     @Override
@@ -45,13 +50,30 @@ public class TileGateContainer extends TileToolContainer {
     }
 
     @Override
-    public void triggerInputChange(String port, Object value) {
-        super.triggerInputChange(port, value);
+    public void update() {
+        super.update();
+
+        if (gate == null || gate.isEmpty())
+            throw new RuntimeException();
+
+        if (!world.isRemote) {
+            BaseGate gate = GateRegistry.INSTANCE.getGate(this.gate);
+            gate.tick(this, totalTicks);
+        }
+    }
+
+    @Override
+    public void onInputChange(String port, Object value) {
+        super.onInputChange(port, value);
 
         if (gate == null || gate.isEmpty())
             throw new RuntimeException();
 
         BaseGate gate = GateRegistry.INSTANCE.getGate(this.gate);
         gate.calculateOutput(this);
+    }
+
+    public final NBTTagCompound getGateState() {
+        return state;
     }
 }
