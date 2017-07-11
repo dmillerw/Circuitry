@@ -9,6 +9,8 @@ import me.dmillerw.io.circuit.data.NullValue;
 import me.dmillerw.io.circuit.data.Port;
 import me.dmillerw.io.circuit.data.Value;
 import me.dmillerw.io.circuit.grid.ConnectivityGrid;
+import me.dmillerw.io.network.PacketHandler;
+import me.dmillerw.io.network.packet.client.CUpdatePorts;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
@@ -56,13 +58,13 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
      * A circuit can be set to listen to any number of ports available on its network, but one port can only ever
      * listen to one other port on the network, but another port on the network can be listened to by multiple
      * ports
-     *
+     * <p>
      * Listeners are stored so that an input can only ever expect to receive an update from one other port on the network
      * With the main key of the Map being our input port, and the value being a Pair defining which circuit and output
      * we're listening to
-     *
+     * <p>
      * Map is also a BiMap, to allow for easier lookup of what (if any) input is listening for a specifric output
-     *
+     * <p>
      * Registering a listener will also immediately send the newly registered listener the last value available from
      * the output port
      */
@@ -172,20 +174,20 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
 
         // Data
         NBTTagList inputs = compound.getTagList("Inputs", TAG_COMPOUND);
-        for (int i=0; i<inputs.tagCount(); i++) {
+        for (int i = 0; i < inputs.tagCount(); i++) {
             Port port = Port.fromNbt(inputs.getCompoundTagAt(i));
             cachedInputs.put(port.name, port);
         }
 
         NBTTagList outputs = compound.getTagList("Outputs", TAG_COMPOUND);
-        for (int i=0; i<outputs.tagCount(); i++) {
+        for (int i = 0; i < outputs.tagCount(); i++) {
             Port port = Port.fromNbt(outputs.getCompoundTagAt(i));
             cachedOutputs.put(port.name, port);
         }
 
         // Listening
         NBTTagList nbtListening = compound.getTagList(NBT_KEY_LISTENERS, TAG_COMPOUND);
-        for (int i=0; i<nbtListening.tagCount(); i++) {
+        for (int i = 0; i < nbtListening.tagCount(); i++) {
             NBTTagCompound listener = nbtListening.getCompoundTagAt(i);
 
             String input = listener.getString("Input");
@@ -199,12 +201,15 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
     public UUID getUuid() {
         return this.uuid;
     }
+
     public String getName() {
         return this.name;
     }
+
     public boolean hasInputs() {
         return inputs.size() > 0;
     }
+
     public boolean hasOutputs() {
         return outputs.size() > 0;
     }
@@ -212,7 +217,9 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
     public final void updateInput(String port, Value rawValue) {
         Port p = inputs.get(port);
         if (p == null) {
-            throw new RuntimeException();
+            p = cachedInputs.get(port);
+            if (p == null)
+                throw new RuntimeException(getName() + ": No INPUT called " + port);
         }
 
         Value value;
@@ -221,20 +228,26 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
         else
             value = Value.of(p.type, rawValue);
 
-        p.setValue(value);
+        if (!value.equals(p.value)) {
+            p.setValue(value);
 
-        inputs.put(port, p);
+            inputs.put(port, p);
 
-        if (world.isRemote)
-            return;
+            if (world.isRemote)
+                return;
 
-        onInputChange(port, value);
+            PacketHandler.INSTANCE.sendToDimension(CUpdatePorts.input(this, port), world.provider.getDimension());
+
+            onInputChange(port, value);
+        }
     }
 
     public final void updateOutput(String port, Object rawValue) {
         Port p = outputs.get(port);
         if (p == null) {
-            throw new RuntimeException();
+            p = cachedOutputs.get(port);
+            if (p == null)
+                throw new RuntimeException(getName() + ": No OUTPUT called " + port);
         }
 
         Value value;
@@ -243,14 +256,19 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
         else
             value = Value.of(p.type, rawValue);
 
-        p.setValue(value);
+        if (!value.equals(p.value)) {
+            p.setValue(value);
 
-        outputs.put(port, p);
+            outputs.put(port, p);
 
-        if (world.isRemote)
-            return;
+            if (world.isRemote)
+                return;
 
-        grid.propagateOutputUpdate(this, port, value);
+            PacketHandler.INSTANCE.sendToDimension(CUpdatePorts.output(this, port), world.provider.getDimension());
+
+            grid.propagateOutputUpdate(this, port, value);
+        }
+
     }
 
     public final void resetOutputs() {
@@ -310,7 +328,7 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
         Set<UUID> nodes = grid.getMembers().values().stream()
                 .filter(m -> m.getMemberType() == ConnectivityGrid.MemberType.NODE)
                 .filter(m -> m instanceof TileToolContainer)
-                .map(m -> ((TileToolContainer)m).getUuid())
+                .map(m -> ((TileToolContainer) m).getUuid())
                 .collect(Collectors.toSet());
 
         Iterator<Pair<UUID, String>> iterator = listeners.values().iterator();

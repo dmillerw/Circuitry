@@ -25,6 +25,24 @@ public class CUpdatePorts implements IMessage {
         return packet;
     }
 
+    public static CUpdatePorts input(TileToolContainer tile, String port) {
+        CUpdatePorts packet = new CUpdatePorts();
+
+        packet.target = tile.getPosition();
+        packet.inputs = new Port[]{tile.getInput(port)};
+
+        return packet;
+    }
+
+    public static CUpdatePorts output(TileToolContainer tile, String port) {
+        CUpdatePorts packet = new CUpdatePorts();
+
+        packet.target = tile.getPosition();
+        packet.outputs = new Port[]{tile.getOutput(port)};
+
+        return packet;
+    }
+
     private static void writePorts(ByteBuf buf, Port[] ports) {
         if (ports.length > 0) {
             buf.writeBoolean(true);

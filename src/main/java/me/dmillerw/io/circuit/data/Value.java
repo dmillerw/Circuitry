@@ -62,6 +62,24 @@ public class Value {
     }
 
     @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+
+        Value value1 = (Value) object;
+
+        if (dataType != value1.dataType) return false;
+        return value.equals(value1.value);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = dataType.hashCode();
+        result = 31 * result + value.hashCode();
+        return result;
+    }
+
+    @Override
     public String toString() {
         if (value == null || isType(DataType.NULL))
             return "NULL";

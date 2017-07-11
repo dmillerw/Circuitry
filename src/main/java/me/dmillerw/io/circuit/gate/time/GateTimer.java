@@ -38,6 +38,7 @@ public class GateTimer extends BaseGate {
     public void calculateOutput(TileGateContainer parentTile) {
         if (parentTile.getInput("Reset").value.getNumber().intValue() > 0) {
             parentTile.getGateState().setInteger("Timer", 0);
+            parentTile.updateOutput("Out", 0);
         }
     }
 }
