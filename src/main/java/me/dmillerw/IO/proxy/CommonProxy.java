@@ -3,6 +3,7 @@ package me.dmillerw.io.proxy;
 import me.dmillerw.io.IO;
 import me.dmillerw.io.block.tile.TileCable;
 import me.dmillerw.io.block.tile.TileGateContainer;
+import me.dmillerw.io.block.tile.TilePlayerTracker;
 import me.dmillerw.io.block.tile.TileScreen;
 import me.dmillerw.io.block.tile.circuit.CircuitConstantValue;
 import me.dmillerw.io.block.tile.circuit.CircuitRedstoneEmitter;
@@ -26,6 +27,7 @@ public class CommonProxy {
         GameRegistry.registerTileEntity(TileCable.class, ModInfo.MOD_ID + ":cable");
         GameRegistry.registerTileEntity(TileGateContainer.class, ModInfo.MOD_ID + ":gate");
         GameRegistry.registerTileEntity(TileScreen.class, ModInfo.MOD_ID + ":screen");
+        GameRegistry.registerTileEntity(TilePlayerTracker.class, ModInfo.MOD_ID + ":player_tracker");
 
         GameRegistry.registerTileEntity(CircuitRedstoneEmitter.class, ModInfo.MOD_ID + ":redstone_emitter");
         GameRegistry.registerTileEntity(CircuitRedstoneReceiver.class, ModInfo.MOD_ID + ":redstone_receiver");

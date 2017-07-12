@@ -43,6 +43,10 @@ public class ModBlocks {
     @GameRegistry.ObjectHolder(ModInfo.MOD_ID + ":screen")
     public static final ItemBlock screen_item = null;
 
+    public static final BlockPlayerTracker player_tracker = null;
+    @GameRegistry.ObjectHolder(ModInfo.MOD_ID + ":player_tracker")
+    public static final ItemBlock player_tracker_item = null;
+
     @Mod.EventBusSubscriber
     public static class Loader {
 
@@ -54,7 +58,8 @@ public class ModBlocks {
                     new BlockConstantValue().setRegistryName(ModInfo.MOD_ID, "constant_value"),
                     new BlockGateContainer().setRegistryName(ModInfo.MOD_ID, "gate"),
                     new BlockRedstoneReceiver().setRegistryName(ModInfo.MOD_ID, "redstone_receiver"),
-                    new BlockScreen().setRegistryName(ModInfo.MOD_ID, "screen")
+                    new BlockScreen().setRegistryName(ModInfo.MOD_ID, "screen"),
+                    new BlockPlayerTracker().setRegistryName(ModInfo.MOD_ID, "player_tracker")
             );
         }
 
@@ -66,7 +71,8 @@ public class ModBlocks {
                     new ItemBlock(ModBlocks.constant_value).setRegistryName(ModInfo.MOD_ID, "constant_value"),
                     new ItemGateContainer(ModBlocks.gate).setRegistryName(ModInfo.MOD_ID, "gate"),
                     new ItemBlock(ModBlocks.redstone_receiver).setRegistryName(ModInfo.MOD_ID, "redstone_receiver"),
-                    new ItemBlock(ModBlocks.screen).setRegistryName(ModInfo.MOD_ID, "screen")
+                    new ItemBlock(ModBlocks.screen).setRegistryName(ModInfo.MOD_ID, "screen"),
+                    new ItemBlock(ModBlocks.player_tracker).setRegistryName(ModInfo.MOD_ID, "player_tracker")
             );
         }
     }

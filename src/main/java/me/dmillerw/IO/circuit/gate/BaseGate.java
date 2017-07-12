@@ -12,7 +12,9 @@ public class BaseGate {
         ARITHMATIC,
         LOGIC,
         UTIL,
-        TIME;
+        TIME,
+        ENTITY,
+        VECTOR;
     }
 
     private String key;

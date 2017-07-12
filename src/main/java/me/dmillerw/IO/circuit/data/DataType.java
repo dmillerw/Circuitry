@@ -1,10 +1,7 @@
 package me.dmillerw.io.circuit.data;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagByte;
-import net.minecraft.nbt.NBTTagDouble;
-import net.minecraft.nbt.NBTTagString;
+import net.minecraft.nbt.*;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
@@ -16,7 +13,8 @@ public enum DataType {
     NULL(Value.class, NullValue.NULL),
     NUMBER(Number.class, 0),
     STRING(String.class, ""),
-    VECTOR(Vec3d.class, Vec3d.ZERO);
+    VECTOR(Vec3d.class, Vec3d.ZERO),
+    ENTITY(Integer.class, 0);
 
     public final Class<?> type;
     public final Object zero;
@@ -42,6 +40,8 @@ public enum DataType {
                 return value instanceof String;
             case VECTOR:
                 return value instanceof Vec3d;
+            case ENTITY:
+                return value instanceof Number;
             default:
                 return false;
         }
@@ -53,6 +53,8 @@ public enum DataType {
                 return new NBTTagDouble(value.getNumber().doubleValue());
             case STRING:
                 return new NBTTagString(value.getString());
+            case ENTITY:
+                return new NBTTagInt(value.getContainedEntityId());
             case NULL:
                 return new NBTTagByte((byte) 0);
             default: return null;
@@ -65,6 +67,8 @@ public enum DataType {
                 return Value.of(dataType, ((NBTTagDouble) value).getDouble());
             case STRING:
                 return Value.of(dataType, ((NBTTagString) value).getString());
+            case ENTITY:
+                return Value.of(dataType, ((NBTTagInt) value).getInt());
             case NULL:
                 return NullValue.NULL;
             default: return null;
@@ -77,6 +81,8 @@ public enum DataType {
                 buf.writeDouble(value.getNumber().doubleValue());
             case STRING:
                 ByteBufUtils.writeUTF8String(buf, value.getString());
+            case ENTITY:
+                buf.writeInt(value.getContainedEntityId());
             case NULL:
                 buf.writeBoolean(false);
             default: return;
@@ -89,6 +95,8 @@ public enum DataType {
                 return Value.of(dataType, buf.readDouble());
             case STRING:
                 return Value.of(dataType, ByteBufUtils.readUTF8String(buf));
+            case ENTITY:
+                return Value.of(dataType, buf.readInt());
             case NULL:
                 return NullValue.NULL;
             default: return null;

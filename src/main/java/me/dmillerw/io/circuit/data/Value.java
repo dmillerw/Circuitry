@@ -61,6 +61,10 @@ public class Value {
         return (Vec3d) (isType(DataType.VECTOR) ? value : DataType.VECTOR.zero);
     }
 
+    public Integer getContainedEntityId() {
+        return (Integer) (isType(DataType.ENTITY) ? value : DataType.ENTITY.zero);
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
