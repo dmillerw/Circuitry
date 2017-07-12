@@ -53,6 +53,13 @@ public enum DataType {
                 return new NBTTagDouble(value.getNumber().doubleValue());
             case STRING:
                 return new NBTTagString(value.getString());
+            case VECTOR: {
+                NBTTagCompound tag = new NBTTagCompound();
+                tag.setDouble("X", value.getVector().x);
+                tag.setDouble("Y", value.getVector().y);
+                tag.setDouble("Z", value.getVector().z);
+                return tag;
+            }
             case ENTITY:
                 return new NBTTagInt(value.getContainedEntityId());
             case NULL:
@@ -67,6 +74,10 @@ public enum DataType {
                 return Value.of(dataType, ((NBTTagDouble) value).getDouble());
             case STRING:
                 return Value.of(dataType, ((NBTTagString) value).getString());
+            case VECTOR: {
+                NBTTagCompound tag = (NBTTagCompound) value;
+                return Value.of(dataType, new Vec3d(tag.getDouble("X"), tag.getDouble("Y"), tag.getDouble("Z")));
+            }
             case ENTITY:
                 return Value.of(dataType, ((NBTTagInt) value).getInt());
             case NULL:
@@ -81,6 +92,12 @@ public enum DataType {
                 buf.writeDouble(value.getNumber().doubleValue());
             case STRING:
                 ByteBufUtils.writeUTF8String(buf, value.getString());
+            case VECTOR: {
+                Vec3d vec = value.getVector();
+                buf.writeDouble(vec.x);
+                buf.writeDouble(vec.y);
+                buf.writeDouble(vec.z);
+            }
             case ENTITY:
                 buf.writeInt(value.getContainedEntityId());
             case NULL:
@@ -95,6 +112,8 @@ public enum DataType {
                 return Value.of(dataType, buf.readDouble());
             case STRING:
                 return Value.of(dataType, ByteBufUtils.readUTF8String(buf));
+            case VECTOR:
+                return Value.of(dataType, new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble()));
             case ENTITY:
                 return Value.of(dataType, buf.readInt());
             case NULL:

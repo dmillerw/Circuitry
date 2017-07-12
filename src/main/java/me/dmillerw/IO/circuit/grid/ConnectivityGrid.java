@@ -87,9 +87,6 @@ public class ConnectivityGrid {
             if (tile == null || !(tile instanceof IGridMember))
                 continue;
 
-            if (gridMember.getMemberType() == MemberType.NODE && ((IGridMember) tile).getMemberType() == MemberType.NODE)
-                continue;
-
             if (gridMember.canConnectTo((IGridMember) tile, facing))
                 neighbors.add((IGridMember) tile);
         }

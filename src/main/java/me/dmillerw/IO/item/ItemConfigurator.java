@@ -1,28 +1,14 @@
 package me.dmillerw.io.item;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-import me.dmillerw.io.api.IGridMember;
-import me.dmillerw.io.block.tile.core.TileToolContainer;
-import me.dmillerw.io.circuit.data.DataType;
-import me.dmillerw.io.circuit.grid.ConnectivityGrid;
 import me.dmillerw.io.lib.ModInfo;
 import me.dmillerw.io.lib.ModTab;
-import me.dmillerw.io.network.PacketHandler;
-import me.dmillerw.io.network.packet.client.COpenConfiguratorGui;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.apache.commons.lang3.tuple.Pair;
-
-import java.util.Map;
-import java.util.Set;
 
 /**
  * @author dmillerw
@@ -42,7 +28,7 @@ public class ItemConfigurator extends Item {
 
     @Override
     public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
-        if (!world.isRemote) {
+        /*if (!world.isRemote) {
             TileEntity tile = world.getTileEntity(pos);
             if (tile != null && tile instanceof TileToolContainer) {
                 if (((TileToolContainer) tile).inputs.isEmpty())
@@ -82,7 +68,7 @@ public class ItemConfigurator extends Item {
 
                 PacketHandler.INSTANCE.sendTo(packet, (EntityPlayerMP) player);
             }
-        }
+        }*/
 
         return world.isRemote ? EnumActionResult.PASS : EnumActionResult.SUCCESS;
     }
