@@ -3,6 +3,7 @@ package me.dmillerw.io.block.tile.core;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import me.dmillerw.io.api.IGridMember;
 import me.dmillerw.io.circuit.data.DataType;
 import me.dmillerw.io.circuit.data.NullValue;
@@ -49,6 +50,8 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
     private String nickname;
 
     private boolean initialized = false;
+
+    private Map<String, Value> queuedUpdates = Maps.newHashMap();
 
     // Stored in NBT on world load, and used in place of zero values once a port is registered
     private Map<String, Port> cachedInputs = Maps.newHashMap();
@@ -159,8 +162,13 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
     @Override
     public void update() {
         if (!world.isRemote) {
-            if (getGrid() == null)
+            if (getGrid() == null) {
                 setGrid(ConnectivityGrid.createOrJoin(this));
+            } else {
+                for (Map.Entry<String, Value> update : queuedUpdates.entrySet()) {
+                    grid.propagateOutputUpdate(this, update.getKey(), update.getValue());
+                }
+            }
         }
 
         if (!initialized) {
@@ -324,9 +332,8 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
 
             PacketHandler.sendToAllWatching(CUpdatePorts.output(this, port), this);
 
-            grid.propagateOutputUpdate(this, port, value);
+            queuedUpdates.put(port, value);
         }
-
     }
 
     public final void resetOutputs() {
@@ -339,7 +346,7 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
 
     }
 
-    public void onInputChange(String port, Object value) {
+    public void onInputChange(String port, Value value) {
 
     }
 
@@ -389,6 +396,8 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
                 .map(m -> ((TileToolContainer) m).getUuid())
                 .collect(Collectors.toSet());
 
+        Set<String> removedNodes = Sets.newHashSet();
+
         Iterator<Pair<UUID, String>> iterator = listeners.values().iterator();
         while (iterator.hasNext()) {
             Pair<UUID, String> pair = iterator.next();
@@ -401,8 +410,12 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
 
                 updateInput(input, NullValue.NULL);
 
-                iterator.remove();
+                removedNodes.add(input);
             }
+        }
+
+        for (String input : removedNodes) {
+            removeListener(input);
         }
     }
 }

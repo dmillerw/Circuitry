@@ -22,13 +22,20 @@ public class GateTimer extends BaseGate {
 
     @Override
     public void tick(TileGateContainer parentTile, int lifespan) {
+        if (parentTile.getInput("Reset").value.getNumber().intValue() > 0) {
+            return;
+        }
+
         if (parentTile.getInput("Run").value.getNumber().intValue() > 0) {
             if (lifespan % 20 == 0) {
                 int timer = parentTile.getGateState().getInteger("Timer");
-                timer++;
+                if (parentTile.getInput("Reset").value.getNumber().intValue() > 0) {
+                    timer = 0;
+                } else {
+                    timer++;
+                }
 
                 parentTile.updateOutput("Out", timer);
-
                 parentTile.getGateState().setInteger("Timer", timer);
             }
         }

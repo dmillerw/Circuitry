@@ -24,6 +24,6 @@ public class GateConstantValue extends BaseGate {
     public void calculateOutput(TileGateContainer parentTile) {
         super.calculateOutput(parentTile);
 
-        parentTile.updateOutput("Out", 1);
+        parentTile.updateOutput("Out", 60);
     }
 }

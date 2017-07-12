@@ -14,7 +14,8 @@ public class BaseGate {
         UTIL,
         TIME,
         ENTITY,
-        VECTOR;
+        VECTOR,
+        COMPARISON;
     }
 
     private String key;

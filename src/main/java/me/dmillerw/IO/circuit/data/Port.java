@@ -17,21 +17,30 @@ public class Port {
         String name = tagCompound.getString("Name");
         DataType type = DataType.values()[tagCompound.getByte("Type")];
         Value value = DataType.getValueFromNbtTag(type, tagCompound.getTag("Value"));
+        Value previousValue = DataType.getValueFromNbtTag(type, tagCompound.getTag("PreviousValue"));
 
-        return new Port(name, type, value);
+        Port port = new Port(name, type, value);
+        port.previousValue = previousValue;
+
+        return port;
     }
 
     public static Port fromByteBuf(ByteBuf buf) {
         String name = ByteBufUtils.readUTF8String(buf);
         DataType type = DataType.values()[buf.readByte()];
         Value value = DataType.readValueFromByteBuf(type, buf);
+        Value previousValue = DataType.readValueFromByteBuf(type, buf);
 
-        return new Port(name, type, value);
+        Port port = new Port(name, type, value);
+        port.previousValue = previousValue;
+
+        return port;
     }
 
     public final String name;
     public final DataType type;
     public Value value;
+    public Value previousValue = NullValue.NULL;
 
     private Port(String name, DataType type, Value value) {
         this.name = name;
@@ -44,6 +53,7 @@ public class Port {
             if (!value.isType(type))
                 throw new IllegalArgumentException(value + " is not " + type.toString());
 
+        this.previousValue = this.value;
         this.value = value;
     }
 
@@ -51,11 +61,13 @@ public class Port {
         tagCompound.setString("Name", name);
         tagCompound.setByte("Type", (byte) type.ordinal());
         tagCompound.setTag("Value", DataType.getNbtTagFromValue(type, value));
+        tagCompound.setTag("PreviousValue", DataType.getNbtTagFromValue(type, previousValue));
     }
 
     public void writeToByteBuf(ByteBuf buf) {
         ByteBufUtils.writeUTF8String(buf, name);
         buf.writeByte(type.ordinal());
         DataType.writeValueToByteBuf(type, value, buf);
+        DataType.writeValueToByteBuf(type, previousValue, buf);
     }
 }

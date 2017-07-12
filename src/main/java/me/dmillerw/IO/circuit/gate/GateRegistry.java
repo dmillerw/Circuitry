@@ -2,7 +2,9 @@ package me.dmillerw.io.circuit.gate;
 
 import com.google.common.collect.Maps;
 import me.dmillerw.io.circuit.gate.arithmatic.GateAdd;
+import me.dmillerw.io.circuit.gate.arithmatic.GateCounter;
 import me.dmillerw.io.circuit.gate.arithmatic.GateFloor;
+import me.dmillerw.io.circuit.gate.comparison.GateEquals;
 import me.dmillerw.io.circuit.gate.entity.GateEntityPosition;
 import me.dmillerw.io.circuit.gate.logic.GateAnd;
 import me.dmillerw.io.circuit.gate.time.GateTimer;
@@ -23,7 +25,9 @@ public class GateRegistry {
         INSTANCE.register(new GateAdd());
         INSTANCE.register(new GateFloor());
         INSTANCE.register(new GateAnd());
+        INSTANCE.register(new GateEquals());
         INSTANCE.register(new GateTimer());
+        INSTANCE.register(new GateCounter());
         INSTANCE.register(new GateConstantValue());
         INSTANCE.register(new GateNonNullCount());
         INSTANCE.register(new GateEntityPosition());
