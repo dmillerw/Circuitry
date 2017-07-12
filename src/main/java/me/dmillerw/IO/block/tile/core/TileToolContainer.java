@@ -10,6 +10,8 @@ import me.dmillerw.io.circuit.data.Port;
 import me.dmillerw.io.circuit.data.Value;
 import me.dmillerw.io.circuit.grid.ConnectivityGrid;
 import me.dmillerw.io.network.PacketHandler;
+import me.dmillerw.io.network.packet.client.CAddListener;
+import me.dmillerw.io.network.packet.client.CRemoveListener;
 import me.dmillerw.io.network.packet.client.CUpdatePorts;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -44,6 +46,7 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
     private UUID uuid = UUID.randomUUID();
 
     private String name;
+    private String nickname;
 
     private boolean initialized = false;
 
@@ -63,18 +66,61 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
      * With the main key of the Map being our input port, and the value being a Pair defining which circuit and output
      * we're listening to
      * <p>
-     * Map is also a BiMap, to allow for easier lookup of what (if any) input is listening for a specifric output
+     * Map is also a BiMap, to allow for easier lookup of what (if any) input is listening for a specific output
      * <p>
      * Registering a listener will also immediately send the newly registered listener the last value available from
      * the output port
      */
     private BiMap<String, Pair<UUID, String>> listeners = HashBiMap.create();
 
-    public void registerListener(TileToolContainer toolContainer, String output, String input) {
-        //TODO: If input is already listening to something
-        listeners.put(input, Pair.of(toolContainer.uuid, output));
+    public boolean registerListener(TileToolContainer toolContainer, String output, String input) {
+        if (!listeners.containsKey(input)) {
+            if (!world.isRemote) {
+                if (!grid.contains(toolContainer))
+                    return false;
 
-        this.updateInput(input, toolContainer.getOutput(output).value);
+                CAddListener packet = new CAddListener();
+                packet.target = this.pos;
+                packet.destInput = input;
+                packet.sourceUuid = toolContainer.uuid;
+                packet.sourceOutput = output;
+
+                PacketHandler.sendToAllWatching(packet, this);
+
+                this.updateInput(input, toolContainer.getOutput(output).value);
+            }
+
+            listeners.put(input, Pair.of(toolContainer.uuid, output));
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public final void raw_registerListener(UUID uuid, String output, String input) {
+        if (!world.isRemote) return;
+        listeners.put(input, Pair.of(uuid, output));
+    }
+
+    public void removeListener(String input) {
+        if (listeners.containsKey(input)) {
+            if (!world.isRemote) {
+                CRemoveListener packet = new CRemoveListener();
+                packet.target = this.getPosition();
+                packet.destInput = input;
+
+                PacketHandler.sendToAllWatching(packet, this);
+
+                updateInput(input, NullValue.NULL);
+            }
+
+            listeners.remove(input);
+        }
+    }
+
+    public boolean isPortListening(String input) {
+        return listeners.containsKey(input);
     }
 
     public Port getListeningPort(TileToolContainer toolContainer, String origin) {
@@ -130,6 +176,8 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
         compound.setLong(NBT_KEY_UUID_MOST, uuid.getMostSignificantBits());
         compound.setLong(NBT_KEY_UUID_LEAST, uuid.getLeastSignificantBits());
 
+        compound.setString("Nickname", nickname == null ? "" : nickname);
+
         // Data
         NBTTagList inputs = new NBTTagList();
         for (Port input : this.inputs.values()) {
@@ -172,6 +220,8 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
 
         uuid = new UUID(compound.getLong(NBT_KEY_UUID_MOST), compound.getLong(NBT_KEY_UUID_LEAST));
 
+        nickname = compound.getString("Nickname");
+
         // Data
         NBTTagList inputs = compound.getTagList("Inputs", TAG_COMPOUND);
         for (int i = 0; i < inputs.tagCount(); i++) {
@@ -206,6 +256,14 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
         return this.name;
     }
 
+    public String getNickname() {
+        return this.nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
     public boolean hasInputs() {
         return inputs.size() > 0;
     }
@@ -236,7 +294,7 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
             if (world.isRemote)
                 return;
 
-            PacketHandler.INSTANCE.sendToDimension(CUpdatePorts.input(this, port), world.provider.getDimension());
+            PacketHandler.sendToAllWatching(CUpdatePorts.input(this, port), this);
 
             onInputChange(port, value);
         }
@@ -264,7 +322,7 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
             if (world.isRemote)
                 return;
 
-            PacketHandler.INSTANCE.sendToDimension(CUpdatePorts.output(this, port), world.provider.getDimension());
+            PacketHandler.sendToAllWatching(CUpdatePorts.output(this, port), this);
 
             grid.propagateOutputUpdate(this, port, value);
         }

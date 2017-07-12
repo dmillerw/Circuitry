@@ -1,12 +1,18 @@
 package me.dmillerw.io.network;
 
 import me.dmillerw.io.lib.ModInfo;
-import me.dmillerw.io.network.packet.client.COpenConfiguratorGui;
+import me.dmillerw.io.network.packet.client.CAddListener;
+import me.dmillerw.io.network.packet.client.COpenOutputGui;
+import me.dmillerw.io.network.packet.client.CRemoveListener;
 import me.dmillerw.io.network.packet.client.CUpdatePorts;
 import me.dmillerw.io.network.packet.server.SCreateConnection;
+import me.dmillerw.io.network.packet.server.SRequestOutputGui;
+import me.dmillerw.io.network.packet.server.SResetConnection;
+import me.dmillerw.io.network.packet.server.SUpdateLinkingTool;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.management.PlayerChunkMap;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -46,9 +52,18 @@ public class PacketHandler {
 
     static {
         registerServerMessage(SCreateConnection.class, SCreateConnection.Handler.class);
+        registerServerMessage(SResetConnection.class, SResetConnection.Handler.class);
+        registerServerMessage(SUpdateLinkingTool.class, SUpdateLinkingTool.Handler.class);
+        registerServerMessage(SRequestOutputGui.class, SRequestOutputGui.Handler.class);
 
-        registerClientMessage(COpenConfiguratorGui.class, COpenConfiguratorGui.Handler.class);
         registerClientMessage(CUpdatePorts.class, CUpdatePorts.Handler.class);
+        registerClientMessage(CAddListener.class, CAddListener.Handler.class);
+        registerClientMessage(CRemoveListener.class, CRemoveListener.Handler.class);
+        registerClientMessage(COpenOutputGui.class, COpenOutputGui.Handler.class);
+    }
+
+    public static void sendToAllWatching(IMessage message, TileEntity tile) {
+        sendToAllWatching(message, tile.getWorld(), tile.getPos());
     }
 
     public static void sendToAllWatching(IMessage message, World world, BlockPos pos) {

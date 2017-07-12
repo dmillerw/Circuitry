@@ -79,7 +79,6 @@ public class GuiConfigurator extends GuiScreen {
     @Override
     protected void actionPerformed(GuiButton button) throws IOException {
         if (button.id == 1) {
-            mc.displayGuiScreen(new GuiLinking(circuitTile));
         }
     }
 

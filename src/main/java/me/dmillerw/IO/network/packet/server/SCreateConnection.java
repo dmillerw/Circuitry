@@ -3,6 +3,7 @@ package me.dmillerw.io.network.packet.server;
 import io.netty.buffer.ByteBuf;
 import me.dmillerw.io.block.tile.core.TileToolContainer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -50,7 +51,10 @@ public class SCreateConnection implements IMessage {
                     TileToolContainer dest = (TileToolContainer) world.getTileEntity(message.destPosition);
                     if (dest == null) return;
 
-                    dest.registerListener(source, message.sourcePort, message.destPort);
+                    if (!dest.registerListener(source, message.sourcePort, message.destPort))
+                        ctx.getServerHandler().player.sendMessage(new TextComponentString("Link failed"));
+                    else
+                        ctx.getServerHandler().player.sendMessage(new TextComponentString("Link successful"));
                 }
             });
             return null;
