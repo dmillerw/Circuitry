@@ -1,6 +1,7 @@
 package me.dmillerw.io.block.tile;
 
 import me.dmillerw.io.block.tile.core.TileToolContainer;
+import me.dmillerw.io.circuit.data.Value;
 import me.dmillerw.io.circuit.gate.BaseGate;
 import me.dmillerw.io.circuit.gate.GateRegistry;
 import net.minecraft.nbt.NBTTagCompound;
@@ -63,7 +64,7 @@ public class TileGateContainer extends TileToolContainer {
     }
 
     @Override
-    public void onInputChange(String port, Object value) {
+    public void onInputChange(String port, Value value) {
         super.onInputChange(port, value);
 
         if (gate == null || gate.isEmpty())

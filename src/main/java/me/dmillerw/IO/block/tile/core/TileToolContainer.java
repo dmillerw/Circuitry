@@ -186,6 +186,20 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
 
         compound.setString("Nickname", nickname == null ? "" : nickname);
 
+        // Update Queue
+        NBTTagList queue = new NBTTagList();
+        for (Map.Entry<String, Value> entry : queuedUpdates.entrySet()) {
+            DataType type = entry.getValue().getType();
+
+            NBTTagCompound tag = new NBTTagCompound();
+            tag.setString("Name", entry.getKey());
+            tag.setInteger("Type", type.ordinal());
+            tag.setTag("Value", DataType.getNbtTagFromValue(type, entry.getValue()));
+
+            queue.appendTag(tag);
+        }
+        compound.setTag("QueuedUpdates", queue);
+
         // Data
         NBTTagList inputs = new NBTTagList();
         for (Port input : this.inputs.values()) {
@@ -229,6 +243,18 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
         uuid = new UUID(compound.getLong(NBT_KEY_UUID_MOST), compound.getLong(NBT_KEY_UUID_LEAST));
 
         nickname = compound.getString("Nickname");
+
+        // Update Queue
+        NBTTagList queue = compound.getTagList("QueuedUpdates", TAG_COMPOUND);
+        for (int i = 0; i < queue.tagCount(); i++) {
+            NBTTagCompound tag = queue.getCompoundTagAt(i);
+
+            String name = tag.getString("Name");
+            DataType type = DataType.values()[tag.getInteger("Type")];
+            Value value = DataType.getValueFromNbtTag(type, tag.getTag("Value"));
+
+            queuedUpdates.put(name, value);
+        }
 
         // Data
         NBTTagList inputs = compound.getTagList("Inputs", TAG_COMPOUND);
