@@ -2,6 +2,7 @@ package me.dmillerw.io.circuit.data;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 /**
@@ -37,15 +38,23 @@ public class Port {
         return port;
     }
 
-    public final String name;
-    public final DataType type;
-    public Value value;
-    public Value previousValue = NullValue.NULL;
+    private final String name;
+    private final DataType type;
+    private Value value;
+    private Value previousValue = NullValue.NULL;
 
     private Port(String name, DataType type, Value value) {
         this.name = name;
         this.type = type;
         this.value = value;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public DataType getType() {
+        return type;
     }
 
     public void setValue(Value value) {
@@ -55,6 +64,14 @@ public class Port {
 
         this.previousValue = this.value;
         this.value = value;
+    }
+
+    public Value getValue() {
+        return value;
+    }
+
+    public boolean hasValueChanged() {
+        return !value.equals(previousValue);
     }
 
     public void writeToTag(NBTTagCompound tagCompound) {
@@ -69,5 +86,30 @@ public class Port {
         buf.writeByte(type.ordinal());
         DataType.writeValueToByteBuf(type, value, buf);
         DataType.writeValueToByteBuf(type, previousValue, buf);
+    }
+
+    // Passthrough methods to Value, for convenience
+    public Number getNumber() {
+        return value.getNumber();
+    }
+
+    public int getInt() {
+        return getNumber().intValue();
+    }
+
+    public double getDouble() {
+        return getNumber().doubleValue();
+    }
+
+    public String getString() {
+        return value.getString();
+    }
+
+    public Vec3d getVector() {
+        return value.getVector();
+    }
+
+    public EntityId getEntity() {
+        return value.getEntity();
     }
 }

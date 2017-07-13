@@ -57,7 +57,7 @@ public class RenderTileScreen extends TileEntitySpecialRenderer<TileScreen> {
         String string = "0";
         if (te.inputs.size() > 0) {
             Port port = te.getInput("Value");
-            string = port.value.toString();
+            string = port.getNumber().toString();
         }
 
         GlStateManager.color(1, 1, 1, 1);

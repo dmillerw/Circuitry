@@ -100,8 +100,10 @@ public class CUpdatePorts implements IMessage {
                 public void run() {
                     TileEntity tile = mc.world.getTileEntity(message.target);
                     if (tile != null) {
-                        for (Port port : message.inputs) ((TileToolContainer)tile).updateInput(port.name, port.value);
-                        for (Port port : message.outputs) ((TileToolContainer)tile).updateOutput(port.name, port.value);
+                        for (Port port : message.inputs)
+                            ((TileToolContainer) tile).updateInput(port.getName(), port.getValue());
+                        for (Port port : message.outputs)
+                            ((TileToolContainer) tile).updateOutput(port.getName(), port.getValue());
                     }
                 }
             });

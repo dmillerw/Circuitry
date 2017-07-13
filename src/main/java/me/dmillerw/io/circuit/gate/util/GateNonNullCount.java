@@ -29,7 +29,7 @@ public class GateNonNullCount extends BaseGate {
         final int[] bucket = {0};
         Arrays.stream(INPUTS).forEach(k -> {
             Port port = parentTile.getInput(k);
-            if (!port.value.isNull()) bucket[0]++;
+            if (!port.getValue().isNull()) bucket[0]++;
         });
 
         parentTile.updateOutput("Out", bucket[0]);

@@ -59,10 +59,10 @@ public class GuiSelectOutput extends GuiScreen {
 
             if (i < destOutputPorts.length) {
                 final Port port = destOutputPorts[i];
-                String display = port.name;
+                String display = port.getName();
                 boolean enabled = true;
 
-                if (port.type != ItemLinkingTool.getTargetDataType(linkingTool)) {
+                if (port.getType() != ItemLinkingTool.getTargetDataType(linkingTool)) {
                     display = TextFormatting.RED + display;
                     enabled = false;
                 }
@@ -99,7 +99,7 @@ public class GuiSelectOutput extends GuiScreen {
 
             SCreateConnection packet = new SCreateConnection();
             packet.sourcePosition = circuitTile.getPosition();
-            packet.sourcePort = port.name;
+            packet.sourcePort = port.getName();
             packet.destPosition = ItemLinkingTool.getTargetPosition(linkingTool);
             packet.destPort = ItemLinkingTool.getTargetPort(linkingTool);
 

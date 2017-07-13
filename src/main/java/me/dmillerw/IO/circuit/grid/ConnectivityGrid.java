@@ -10,7 +10,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.FMLLog;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
@@ -47,10 +46,8 @@ public class ConnectivityGrid {
                 ConnectivityGrid grid = null;
                 for (ConnectivityGrid g : otherGrids) {
                     if (grid != null) {
-                        FMLLog.info("Found existing grid: Merging " + g.uuid + " into " + grid.uuid);
                         grid.joinGrid(g);
                     } else {
-                        FMLLog.info("Found existing grid: Attaching to " + g.uuid);
                         grid = g;
                     }
                 }
@@ -58,7 +55,6 @@ public class ConnectivityGrid {
                 if (grid != null) {
                     int old = grid.members.size();
                     grid.addMember(gridMember);
-                    FMLLog.info("Joined grid: Used to have " + old + " members, now has " + grid.members.size());
                 }
 
                 hasJoinedGrid = true;
@@ -70,8 +66,6 @@ public class ConnectivityGrid {
             ConnectivityGrid grid = GridRegistry.INSTANCE.getNewGrid(true);
             grid.addMember(gridMember);
             newGrid = grid;
-
-            FMLLog.info("Couldn't find an existing grid, creating " + grid.uuid);
         }
 
         return newGrid;
@@ -178,15 +172,12 @@ public class ConnectivityGrid {
     }
 
     public void splitGridAtPoint(IGridMember splitPoint) {
-        FMLLog.info("Splitting " + uuid);
-
         Set<ConnectivityGrid> newGrids = Sets.newHashSet();
         for (IGridMember neighbor : getNeighbors(splitPoint, false)) {
             boolean belongsToGrid = false;
             if (newGrids.size() > 0) {
                 for (ConnectivityGrid grid : newGrids) {
                     if (grid.contains(neighbor)) {
-                        FMLLog.info("Neighbor is joining " + uuid);
                         belongsToGrid = true;
                         break;
                     }
@@ -197,14 +188,11 @@ public class ConnectivityGrid {
                 ConnectivityGrid grid = GridRegistry.INSTANCE.getNewGrid(false);
                 grid.buildUpFromMember(neighbor, grid, splitPoint);
 
-                FMLLog.info("Built new grid: " + grid.uuid + " with " + grid.members.size() + " members");
-
                 newGrids.add(grid);
             }
         }
 
         if (newGrids.size() > 0) {
-            FMLLog.info("Created " + newGrids.size() + " new grid(s)");
             for (ConnectivityGrid grid : newGrids) {
                 GridRegistry.INSTANCE.add(grid);
                 grid.markDirty();
@@ -256,7 +244,7 @@ public class ConnectivityGrid {
                 if (m instanceof TileToolContainer) {
                     Port listener = ((TileToolContainer) m).getListeningPort(origin, port);
                     if (listener != null) {
-                        ((TileToolContainer) m).updateInput(listener.name, value);
+                        ((TileToolContainer) m).updateInput(listener.getName(), value);
                     }
                 }
             }

@@ -3,7 +3,6 @@ package me.dmillerw.io.circuit.gate.comparison;
 import me.dmillerw.io.block.tile.TileGateContainer;
 import me.dmillerw.io.circuit.data.DataType;
 import me.dmillerw.io.circuit.gate.BaseGate;
-import net.minecraftforge.fml.common.FMLLog;
 
 /**
  * @author dmillerw
@@ -24,11 +23,9 @@ public class GateEquals extends BaseGate {
 
     @Override
     public void calculateOutput(TileGateContainer parentTile) {
-        double a = parentTile.getInput("A").value.getNumber().doubleValue();
-        double b = parentTile.getInput("B").value.getNumber().doubleValue();
+        double a = parentTile.getInput("A").getDouble();
+        double b = parentTile.getInput("B").getDouble();
 
-        FMLLog.info("EQUALS: " + a + " = " + b + " ? " + (a >= b));
-
-        parentTile.updateOutput("Out", a >= b ? 1 : 0);
+        parentTile.updateOutput("Out", a == b ? 1 : 0);
     }
 }

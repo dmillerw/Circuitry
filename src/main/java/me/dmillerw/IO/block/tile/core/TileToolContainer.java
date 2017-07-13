@@ -90,7 +90,7 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
 
                 PacketHandler.sendToAllWatching(packet, this);
 
-                this.updateInput(input, toolContainer.getOutput(output).value);
+                this.updateInput(input, toolContainer.getOutput(output).getValue());
             }
 
             listeners.put(input, Pair.of(toolContainer.uuid, output));
@@ -260,13 +260,13 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
         NBTTagList inputs = compound.getTagList("Inputs", TAG_COMPOUND);
         for (int i = 0; i < inputs.tagCount(); i++) {
             Port port = Port.fromNbt(inputs.getCompoundTagAt(i));
-            cachedInputs.put(port.name, port);
+            cachedInputs.put(port.getName(), port);
         }
 
         NBTTagList outputs = compound.getTagList("Outputs", TAG_COMPOUND);
         for (int i = 0; i < outputs.tagCount(); i++) {
             Port port = Port.fromNbt(outputs.getCompoundTagAt(i));
-            cachedOutputs.put(port.name, port);
+            cachedOutputs.put(port.getName(), port);
         }
 
         // Listening
@@ -318,9 +318,9 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
         if (rawValue == null)
             value = NullValue.NULL;
         else
-            value = Value.of(p.type, rawValue);
+            value = Value.of(p.getType(), rawValue);
 
-        if (!value.equals(p.value)) {
+        if (!value.equals(p.getValue())) {
             p.setValue(value);
 
             inputs.put(port, p);
@@ -346,9 +346,9 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
         if (rawValue == null)
             value = NullValue.NULL;
         else
-            value = Value.of(p.type, rawValue);
+            value = Value.of(p.getType(), rawValue);
 
-        if (!value.equals(p.value)) {
+        if (!value.equals(p.getValue())) {
             p.setValue(value);
 
             outputs.put(port, p);
@@ -364,7 +364,7 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
 
     public final void resetOutputs() {
         for (Port p : outputs.values()) {
-            updateOutput(p.name, NullValue.NULL);
+            updateOutput(p.getName(), NullValue.NULL);
         }
     }
 

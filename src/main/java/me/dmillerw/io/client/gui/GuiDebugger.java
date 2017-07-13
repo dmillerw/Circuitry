@@ -18,8 +18,8 @@ public class GuiDebugger extends GuiScreen {
 
     private TileToolContainer circuitTile;
 
-    private Port[] outputs = new Port[0];
-    private Port[] inputs = new Port[0];
+    private String[] outputs = new String[0];
+    private String[] inputs = new String[0];
 
     private int guiLeft;
     private int guiTop;
@@ -32,8 +32,8 @@ public class GuiDebugger extends GuiScreen {
     public void initGui() {
         super.initGui();
 
-        this.outputs = circuitTile.outputs.values().toArray(new Port[0]);
-        this.inputs = circuitTile.inputs.values().toArray(new Port[0]);
+        this.outputs = circuitTile.outputs.keySet().toArray(new String[0]);
+        this.inputs = circuitTile.inputs.keySet().toArray(new String[0]);
 
         this.guiLeft = (this.width - WIDTH) / 2;
         this.guiTop = (this.height - HEIGHT) / 2;
@@ -56,17 +56,17 @@ public class GuiDebugger extends GuiScreen {
 
         for (int i=0; i<4; i++) {
             if (i < outputs.length) {
-                Port port = outputs[i];
+                Port port = circuitTile.getOutput(outputs[i]);
 
-                fontRenderer.drawString(port.name + " - [" + port.type.toString() + "]", outStartX, outStartY + distance * i, i % 2 == 0 ? 4210752 : 0xFFFFFF);
-                fontRenderer.drawString(port.value.toString(), outStartX, outStartY + 10 + distance * i, i % 2 == 0 ? 4210752 : 0xFFFFFF);
+                fontRenderer.drawString(port.getName() + " - [" + port.getType().toString() + "]", outStartX, outStartY + distance * i, i % 2 == 0 ? 4210752 : 0xFFFFFF);
+                fontRenderer.drawString(port.getValue().toString(), outStartX, outStartY + 10 + distance * i, i % 2 == 0 ? 4210752 : 0xFFFFFF);
             }
 
             if (i < inputs.length) {
-                Port port = inputs[i];
+                Port port = circuitTile.getInput(inputs[i]);
 
-                fontRenderer.drawString(port.name + " - [" + port.type.toString() + "]", inStartX, inStartY + distance * i, i % 2 == 0 ? 4210752 : 0xFFFFFF);
-                fontRenderer.drawString(port.value.toString(), inStartX, inStartY + 10 + distance * i, i % 2 == 0 ? 4210752 : 0xFFFFFF);
+                fontRenderer.drawString(port.getName() + " - [" + port.getType().toString() + "]", inStartX, inStartY + distance * i, i % 2 == 0 ? 4210752 : 0xFFFFFF);
+                fontRenderer.drawString(port.getValue().toString(), inStartX, inStartY + 10 + distance * i, i % 2 == 0 ? 4210752 : 0xFFFFFF);
             }
         }
 

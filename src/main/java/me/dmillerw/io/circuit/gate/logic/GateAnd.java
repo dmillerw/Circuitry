@@ -29,11 +29,11 @@ public class GateAnd extends BaseGate {
         final double[] first = {Double.MIN_VALUE};
         Arrays.stream(INPUTS).forEach(k -> {
             Port port = parentTile.getInput(k);
-            if (!port.value.isNull()) {
+            if (!port.getValue().isNull()) {
                 if (first[0] == Integer.MIN_VALUE) {
-                    first[0] = port.value.getNumber().doubleValue();
+                    first[0] = port.getDouble();
                 } else {
-                    if (first[0] != port.value.getNumber().doubleValue()) {
+                    if (first[0] != port.getDouble()) {
                         parentTile.updateOutput("Out", 0);
                         return;
                     }

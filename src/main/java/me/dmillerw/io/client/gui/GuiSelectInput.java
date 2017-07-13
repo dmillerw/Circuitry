@@ -58,7 +58,7 @@ public class GuiSelectInput extends GuiScreen {
             this.destInputButtons[i] = input;
 
             if (i < destInputPorts.length) {
-                final String name = destInputPorts[i].name;
+                final String name = destInputPorts[i].getName();
                 String display = name;
                 boolean enabled = true;
 
@@ -103,8 +103,8 @@ public class GuiSelectInput extends GuiScreen {
             SUpdateLinkingTool packet = new SUpdateLinkingTool();
             packet.type = SUpdateLinkingTool.Type.SET_TARGET;
             packet.target = circuitTile.getPosition();
-            packet.port = destInputPorts[button.id].name;
-            packet.dataType = destInputPorts[button.id].type;
+            packet.port = destInputPorts[button.id].getName();
+            packet.dataType = destInputPorts[button.id].getType();
 
             PacketHandler.INSTANCE.sendToServer(packet);
 
@@ -116,11 +116,11 @@ public class GuiSelectInput extends GuiScreen {
 
             SResetConnection packet = new SResetConnection();
             packet.target = circuitTile.getPosition();
-            packet.input = destInputPorts[id].name;
+            packet.input = destInputPorts[id].getName();
 
             PacketHandler.INSTANCE.sendToServer(packet);
 
-            destInputButtons[id].displayString = destInputPorts[id].name;
+            destInputButtons[id].displayString = destInputPorts[id].getName();
             destInputButtons[id].enabled = true;
         }
     }

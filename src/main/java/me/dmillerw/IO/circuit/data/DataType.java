@@ -2,6 +2,7 @@ package me.dmillerw.io.circuit.data;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.*;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
@@ -14,7 +15,7 @@ public enum DataType {
     NUMBER(Number.class, 0),
     STRING(String.class, ""),
     VECTOR(Vec3d.class, Vec3d.ZERO),
-    ENTITY(Integer.class, 0);
+    ENTITY(EntityId.class, EntityId.NULL);
 
     public final Class<?> type;
     public final Object zero;
@@ -41,7 +42,7 @@ public enum DataType {
             case VECTOR:
                 return value instanceof Vec3d;
             case ENTITY:
-                return value instanceof Number;
+                return value instanceof EntityId;
             default:
                 return false;
         }
@@ -60,8 +61,12 @@ public enum DataType {
                 tag.setDouble("Z", value.getVector().z);
                 return tag;
             }
-            case ENTITY:
-                return new NBTTagInt(value.getContainedEntityId());
+            case ENTITY: {
+                NBTTagCompound tag = new NBTTagCompound();
+                tag.setInteger("Id", value.getEntity().getEntityId());
+                tag.setString("Entity", value.getEntity().getEntity().toString());
+                return tag;
+            }
             case NULL:
                 return new NBTTagByte((byte) 0);
             default: return null;
@@ -78,8 +83,10 @@ public enum DataType {
                 NBTTagCompound tag = (NBTTagCompound) value;
                 return Value.of(dataType, new Vec3d(tag.getDouble("X"), tag.getDouble("Y"), tag.getDouble("Z")));
             }
-            case ENTITY:
-                return Value.of(dataType, ((NBTTagInt) value).getInt());
+            case ENTITY: {
+                NBTTagCompound tag = (NBTTagCompound) value;
+                return Value.of(dataType, new EntityId(tag.getInteger("Id"), new ResourceLocation(tag.getString("Entity"))));
+            }
             case NULL:
                 return NullValue.NULL;
             default: return null;
@@ -98,8 +105,11 @@ public enum DataType {
                 buf.writeDouble(vec.y);
                 buf.writeDouble(vec.z);
             }
-            case ENTITY:
-                buf.writeInt(value.getContainedEntityId());
+            case ENTITY: {
+                EntityId entityId = value.getEntity();
+                buf.writeInt(entityId.getEntityId());
+                ByteBufUtils.writeUTF8String(buf, entityId.getEntity().toString());
+            }
             case NULL:
                 buf.writeBoolean(false);
             default: return;
@@ -115,7 +125,7 @@ public enum DataType {
             case VECTOR:
                 return Value.of(dataType, new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble()));
             case ENTITY:
-                return Value.of(dataType, buf.readInt());
+                return Value.of(dataType, new EntityId(buf.readInt(), new ResourceLocation(ByteBufUtils.readUTF8String(buf))));
             case NULL:
                 return NullValue.NULL;
             default: return null;

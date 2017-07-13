@@ -29,7 +29,7 @@ public class GateAdd extends BaseGate {
         final double[] bucket = {0};
         Arrays.stream(INPUTS).forEach(k -> {
             Port port = parentTile.getInput(k);
-            bucket[0] += port.value.getNumber().doubleValue();
+            bucket[0] += port.getDouble();
         });
 
         parentTile.updateOutput("Out", bucket[0]);

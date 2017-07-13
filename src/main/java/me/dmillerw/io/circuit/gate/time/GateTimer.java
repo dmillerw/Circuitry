@@ -2,6 +2,7 @@ package me.dmillerw.io.circuit.gate.time;
 
 import me.dmillerw.io.block.tile.TileGateContainer;
 import me.dmillerw.io.circuit.data.DataType;
+import me.dmillerw.io.circuit.data.Port;
 import me.dmillerw.io.circuit.gate.BaseGate;
 
 /**
@@ -22,14 +23,17 @@ public class GateTimer extends BaseGate {
 
     @Override
     public void tick(TileGateContainer parentTile, int lifespan) {
-        if (parentTile.getInput("Reset").value.getNumber().intValue() > 0) {
+        Port portRun = parentTile.getInput("Run");
+        Port portRes = parentTile.getInput("Reset");
+
+        if (portRes.getInt() > 0) {
             return;
         }
 
-        if (parentTile.getInput("Run").value.getNumber().intValue() > 0) {
+        if (portRun.getInt() > 0) {
             if (lifespan % 20 == 0) {
                 int timer = parentTile.getGateState().getInteger("Timer");
-                if (parentTile.getInput("Reset").value.getNumber().intValue() > 0) {
+                if (portRes.getInt() > 0) {
                     timer = 0;
                 } else {
                     timer++;
@@ -43,7 +47,7 @@ public class GateTimer extends BaseGate {
 
     @Override
     public void calculateOutput(TileGateContainer parentTile) {
-        if (parentTile.getInput("Reset").value.getNumber().intValue() > 0) {
+        if (parentTile.getInput("Reset").getInt() > 0) {
             parentTile.getGateState().setInteger("Timer", 0);
             parentTile.updateOutput("Out", 0);
         }

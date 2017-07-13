@@ -2,6 +2,7 @@ package me.dmillerw.io.circuit.gate.arithmatic;
 
 import me.dmillerw.io.block.tile.TileGateContainer;
 import me.dmillerw.io.circuit.data.DataType;
+import me.dmillerw.io.circuit.data.Port;
 import me.dmillerw.io.circuit.gate.BaseGate;
 
 /**
@@ -25,28 +26,32 @@ public class GateCounter extends BaseGate {
 
     @Override
     public void calculateOutput(TileGateContainer parentTile) {
-        int increment = parentTile.getInput("Increment").value.getNumber().intValue();
-        if (increment > 0 && increment != parentTile.getInput("Increment").previousValue.getNumber().intValue()) {
+        Port portInc = parentTile.getInput("Increment");
+        Port portDec = parentTile.getInput("Decrement");
+        Port portRes = parentTile.getInput("Reset");
+
+        int increment = portInc.getInt();
+        if (increment > 0 && portInc.hasValueChanged()) {
             increment = 1;
         } else {
             increment = 0;
         }
 
-        int decrement = parentTile.getInput("Decrement").value.getNumber().intValue();
-        if (decrement > 0 && decrement != parentTile.getInput("Decrement").previousValue.getNumber().intValue()) {
+        int decrement = portDec.getInt();
+        if (decrement > 0 && portDec.hasValueChanged()) {
             decrement = 1;
         } else {
             decrement = 0;
         }
 
-        int reset = parentTile.getInput("Reset").value.getNumber().intValue();
-        if (reset > 0 && reset != parentTile.getInput("Reset").previousValue.getNumber().intValue()) {
+        int reset = portRes.getInt();
+        if (reset > 0 && portRes.hasValueChanged()) {
             reset = 1;
         } else {
             reset = 0;
         }
 
-        int mod = parentTile.getInput("A").value.getNumber().intValue();
+        int mod = parentTile.getInput("A").getInt();
         int value = parentTile.getGateState().getInteger("Value");
 
         if (increment > 0) {

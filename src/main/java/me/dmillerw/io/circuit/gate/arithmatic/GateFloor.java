@@ -21,6 +21,6 @@ public class GateFloor extends BaseGate {
 
     @Override
     public void calculateOutput(TileGateContainer parentTile) {
-        parentTile.updateOutput("Out", Math.floor(parentTile.getInput("In").value.getNumber().doubleValue()));
+        parentTile.updateOutput("Out", Math.floor(parentTile.getInput("In").getDouble()));
     }
 }

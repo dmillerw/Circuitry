@@ -25,7 +25,7 @@ public class GateDecompose extends BaseGate {
 
     @Override
     public void calculateOutput(TileGateContainer parentTile) {
-        Vec3d in = parentTile.getInput("In").value.getVector();
+        Vec3d in = parentTile.getInput("In").getVector();
 
         parentTile.updateOutput("X", in.x);
         parentTile.updateOutput("Y", in.y);
