@@ -20,8 +20,8 @@ public class GateAnd extends BaseGate {
 
     @Override
     public void initialize(TileGateContainer parentTile) {
-        Arrays.stream(INPUTS).forEach(k -> parentTile.registerInput(k, DataType.NUMBER));
-        parentTile.registerOutput("Out", DataType.NUMBER);
+        Arrays.stream(INPUTS).forEach(k -> parentTile.registerInput(DataType.NUMBER, k));
+        parentTile.registerOutput(DataType.NUMBER, "Out");
     }
 
     @Override

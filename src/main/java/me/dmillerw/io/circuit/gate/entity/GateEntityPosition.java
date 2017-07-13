@@ -18,8 +18,8 @@ public class GateEntityPosition extends BaseGate {
 
     @Override
     public void initialize(TileGateContainer parentTile) {
-        parentTile.registerInput("Entity", DataType.ENTITY);
-        parentTile.registerOutput("Position", DataType.VECTOR);
+        parentTile.registerInput(DataType.ENTITY, "Entity");
+        parentTile.registerOutput(DataType.VECTOR, "Position");
     }
 
     @Override

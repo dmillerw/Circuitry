@@ -1,4 +1,4 @@
-package me.dmillerw.io.circuit.gate.arithmatic;
+package me.dmillerw.io.circuit.gate.arithmetic;
 
 import me.dmillerw.io.block.tile.TileGateContainer;
 import me.dmillerw.io.circuit.data.DataType;
@@ -11,17 +11,14 @@ import me.dmillerw.io.circuit.gate.BaseGate;
 public class GateCounter extends BaseGate {
 
     public GateCounter() {
-        super("counter", Category.ARITHMATIC);
+        super("counter", Category.ARITHMETIC);
     }
 
     @Override
     public void initialize(TileGateContainer parentTile) {
-        parentTile.registerInput("A", DataType.NUMBER);
-        parentTile.registerInput("Increment", DataType.NUMBER);
-        parentTile.registerInput("Decrement", DataType.NUMBER);
-        parentTile.registerInput("Reset", DataType.NUMBER);
+        parentTile.registerInput(DataType.NUMBER, "A", "Increment", "Decrement", "Reset");
 
-        parentTile.registerOutput("Out", DataType.NUMBER);
+        parentTile.registerOutput(DataType.NUMBER, "Out");
     }
 
     @Override

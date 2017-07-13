@@ -13,7 +13,7 @@ public class CircuitConstantValue extends TileToolContainer {
     public void initialize() {
         setName("Constant Value");
 
-        registerOutput("Out", DataType.NUMBER);
+        registerOutput(DataType.NUMBER, "Out");
 
         updateOutput("Out", 15);
     }

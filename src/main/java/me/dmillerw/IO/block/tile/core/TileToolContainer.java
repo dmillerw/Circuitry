@@ -135,7 +135,15 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
         this.name = name;
     }
 
-    public final void registerInput(String key, DataType type) {
+    public final void registerInput(DataType type, String... keys) {
+        for (String key : keys) registerInput(type, key);
+    }
+
+    public final void registerOutput(DataType type, String... keys) {
+        for (String key : keys) registerOutput(type, key);
+    }
+
+    private final void registerInput(DataType type, String key) {
         if (cachedInputs.containsKey(key)) {
             inputs.put(key, cachedInputs.get(key));
         } else {
@@ -143,7 +151,7 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
         }
     }
 
-    public final void registerOutput(String key, DataType type) {
+    private final void registerOutput(DataType type, String key) {
         if (cachedOutputs.containsKey(key)) {
             outputs.put(key, cachedOutputs.get(key));
         } else {

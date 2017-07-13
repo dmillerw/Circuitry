@@ -16,11 +16,11 @@ public class GateDecompose extends BaseGate {
 
     @Override
     public void initialize(TileGateContainer parentTile) {
-        parentTile.registerInput("In", DataType.VECTOR);
+        parentTile.registerInput(DataType.VECTOR, "In");
 
-        parentTile.registerOutput("X", DataType.NUMBER);
-        parentTile.registerOutput("Y", DataType.NUMBER);
-        parentTile.registerOutput("Z", DataType.NUMBER);
+        parentTile.registerOutput(DataType.NUMBER, "X");
+        parentTile.registerOutput(DataType.NUMBER, "Y");
+        parentTile.registerOutput(DataType.NUMBER, "Z");
     }
 
     @Override

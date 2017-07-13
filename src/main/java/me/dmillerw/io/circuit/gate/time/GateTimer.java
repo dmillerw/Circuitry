@@ -16,9 +16,9 @@ public class GateTimer extends BaseGate {
 
     @Override
     public void initialize(TileGateContainer parentTile) {
-        parentTile.registerInput("Run", DataType.NUMBER);
-        parentTile.registerInput("Reset", DataType.NUMBER);
-        parentTile.registerOutput("Out", DataType.NUMBER);
+        parentTile.registerInput(DataType.NUMBER, "Run");
+        parentTile.registerInput(DataType.NUMBER, "Reset");
+        parentTile.registerOutput(DataType.NUMBER, "Out");
     }
 
     @Override

@@ -5,11 +5,11 @@ import me.dmillerw.io.block.tile.TileGateContainer;
 /**
  * @author dmillerw
  */
-public class BaseGate {
+public abstract class BaseGate {
 
     public static enum Category {
 
-        ARITHMATIC,
+        ARITHMETIC,
         LOGIC,
         UTIL,
         TIME,
@@ -34,15 +34,11 @@ public class BaseGate {
         return category;
     }
 
-    public void initialize(TileGateContainer parentTile) {
+    public abstract void initialize(TileGateContainer parentTile);
 
-    }
+    public abstract void calculateOutput(TileGateContainer parentTile);
 
     public void tick(TileGateContainer tileGateContainer, int lifespan) {
-
-    }
-
-    public void calculateOutput(TileGateContainer parentTile) {
 
     }
 }

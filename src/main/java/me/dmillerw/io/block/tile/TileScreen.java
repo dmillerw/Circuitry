@@ -10,6 +10,6 @@ public class TileScreen extends TileToolContainer {
 
     @Override
     public void initialize() {
-        registerInput("Value", DataType.NUMBER);
+        registerInput(DataType.NUMBER, "Value");
     }
 }

@@ -1,4 +1,4 @@
-package me.dmillerw.io.circuit.gate.arithmatic;
+package me.dmillerw.io.circuit.gate.arithmetic;
 
 import me.dmillerw.io.block.tile.TileGateContainer;
 import me.dmillerw.io.circuit.data.DataType;
@@ -10,13 +10,13 @@ import me.dmillerw.io.circuit.gate.BaseGate;
 public class GateFloor extends BaseGate {
 
     public GateFloor() {
-        super("floor", Category.ARITHMATIC);
+        super("floor", Category.ARITHMETIC);
     }
 
     @Override
     public void initialize(TileGateContainer parentTile) {
-        parentTile.registerInput("In", DataType.NUMBER);
-        parentTile.registerOutput("Out", DataType.NUMBER);
+        parentTile.registerInput(DataType.NUMBER, "In");
+        parentTile.registerOutput(DataType.NUMBER, "Out");
     }
 
     @Override

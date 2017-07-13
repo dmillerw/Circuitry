@@ -11,7 +11,7 @@ public class TilePlayerTracker extends TileToolContainer {
 
     @Override
     public void initialize() {
-        registerOutput("Player", DataType.ENTITY);
+        registerOutput(DataType.ENTITY, "Player");
     }
 
     public void setTrackingPlayer(EntityPlayer player) {

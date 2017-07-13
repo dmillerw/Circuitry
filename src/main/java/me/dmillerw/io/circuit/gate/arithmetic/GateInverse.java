@@ -1,4 +1,4 @@
-package me.dmillerw.io.circuit.gate.comparison;
+package me.dmillerw.io.circuit.gate.arithmetic;
 
 import me.dmillerw.io.block.tile.TileGateContainer;
 import me.dmillerw.io.circuit.data.DataType;
@@ -7,25 +7,27 @@ import me.dmillerw.io.circuit.gate.BaseGate;
 /**
  * @author dmillerw
  */
-public class GateEquals extends BaseGate {
+public class GateInverse extends BaseGate {
 
-    public GateEquals() {
-        super("equals", Category.COMPARISON);
+    public GateInverse() {
+        super("inverse", Category.ARITHMETIC);
     }
 
     @Override
     public void initialize(TileGateContainer parentTile) {
         parentTile.registerInput(DataType.NUMBER, "A");
-        parentTile.registerInput(DataType.NUMBER, "B");
 
         parentTile.registerOutput(DataType.NUMBER, "Out");
     }
 
     @Override
     public void calculateOutput(TileGateContainer parentTile) {
-        double a = parentTile.getInput("A").getDouble();
-        double b = parentTile.getInput("B").getDouble();
+        double out = 0;
+        try {
+            out = 1D / parentTile.getInput("A").getDouble();
+        } catch (Exception ignore) {
+        }
 
-        parentTile.updateOutput("Out", a == b ? 1 : 0);
+        parentTile.updateOutput("Out", out);
     }
 }

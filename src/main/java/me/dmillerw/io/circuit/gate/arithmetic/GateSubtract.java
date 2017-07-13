@@ -1,4 +1,4 @@
-package me.dmillerw.io.circuit.gate.util;
+package me.dmillerw.io.circuit.gate.arithmetic;
 
 import me.dmillerw.io.block.tile.TileGateContainer;
 import me.dmillerw.io.circuit.data.DataType;
@@ -7,23 +7,24 @@ import me.dmillerw.io.circuit.gate.BaseGate;
 /**
  * @author dmillerw
  */
-public class GateConstantValue extends BaseGate {
+public class GateSubtract extends BaseGate {
 
-    public GateConstantValue() {
-        super("constant_value", Category.ARITHMETIC);
+    public GateSubtract() {
+        super("subtract", Category.ARITHMETIC);
     }
 
     @Override
     public void initialize(TileGateContainer parentTile) {
-        super.initialize(parentTile);
+        parentTile.registerInput(DataType.NUMBER, "A", "B");
 
         parentTile.registerOutput(DataType.NUMBER, "Out");
     }
 
     @Override
     public void calculateOutput(TileGateContainer parentTile) {
-        super.calculateOutput(parentTile);
+        double a = parentTile.getInput("A").getDouble();
+        double b = parentTile.getInput("B").getDouble();
 
-        parentTile.updateOutput("Out", 60);
+        parentTile.updateOutput("Out", a - b);
     }
 }

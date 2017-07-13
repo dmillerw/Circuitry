@@ -17,7 +17,7 @@ public class CircuitRedstoneEmitter extends TileToolContainer {
     public void initialize() {
         setName("Redstone Emitter");
 
-        registerInput(KEY_REDSTONE_LEVEL, DataType.NUMBER);
+        registerInput(DataType.NUMBER, KEY_REDSTONE_LEVEL);
     }
 
     @Override

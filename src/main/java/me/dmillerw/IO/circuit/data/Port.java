@@ -70,6 +70,10 @@ public class Port {
         return value;
     }
 
+    public Value getPreviousValue() {
+        return previousValue;
+    }
+
     public boolean hasValueChanged() {
         return !value.equals(previousValue);
     }

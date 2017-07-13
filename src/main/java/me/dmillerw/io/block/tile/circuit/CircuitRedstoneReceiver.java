@@ -14,7 +14,7 @@ public class CircuitRedstoneReceiver extends TileToolContainer {
     public void initialize() {
         setName("Redstone Emitter");
 
-        registerOutput(KEY_REDSTONE_LEVEL, DataType.NUMBER);
+        registerOutput(DataType.NUMBER, KEY_REDSTONE_LEVEL);
     }
 
     public void updateLevel() {

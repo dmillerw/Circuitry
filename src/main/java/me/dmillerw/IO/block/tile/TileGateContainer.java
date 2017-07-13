@@ -58,6 +58,8 @@ public class TileGateContainer extends TileToolContainer {
             throw new RuntimeException();
 
         if (!world.isRemote) {
+            totalTicks++;
+
             BaseGate gate = GateRegistry.INSTANCE.getGate(this.gate);
             gate.tick(this, totalTicks);
         }
