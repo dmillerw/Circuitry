@@ -36,4 +36,9 @@ public class GateEntityPosition extends BaseGate {
             tileGateContainer.updateOutput("Position", newPos);
         }
     }
+
+    @Override
+    public void calculateOutput(TileGateContainer parentTile) {
+
+    }
 }

@@ -1,16 +1,8 @@
 package me.dmillerw.io.circuit.gate;
 
 import com.google.common.collect.Maps;
-import me.dmillerw.io.circuit.gate.arithmatic.GateAdd;
-import me.dmillerw.io.circuit.gate.arithmatic.GateCounter;
-import me.dmillerw.io.circuit.gate.arithmatic.GateFloor;
-import me.dmillerw.io.circuit.gate.comparison.GateEquals;
-import me.dmillerw.io.circuit.gate.entity.GateEntityPosition;
-import me.dmillerw.io.circuit.gate.logic.GateAnd;
-import me.dmillerw.io.circuit.gate.time.GateTimer;
-import me.dmillerw.io.circuit.gate.util.GateConstantValue;
-import me.dmillerw.io.circuit.gate.util.GateNonNullCount;
-import me.dmillerw.io.circuit.gate.vector.GateDecompose;
+import com.google.common.reflect.ClassPath;
+import net.minecraftforge.fml.common.FMLLog;
 
 import java.util.Collection;
 import java.util.Map;
@@ -21,17 +13,25 @@ import java.util.Map;
 public class GateRegistry {
 
     public static final GateRegistry INSTANCE = new GateRegistry();
+
     static {
-        INSTANCE.register(new GateAdd());
-        INSTANCE.register(new GateFloor());
-        INSTANCE.register(new GateAnd());
-        INSTANCE.register(new GateEquals());
-        INSTANCE.register(new GateTimer());
-        INSTANCE.register(new GateCounter());
-        INSTANCE.register(new GateConstantValue());
-        INSTANCE.register(new GateNonNullCount());
-        INSTANCE.register(new GateEntityPosition());
-        INSTANCE.register(new GateDecompose());
+        try {
+            // Loads all Gates found in 'me.dmillerw.io.circuit.gate'
+            // Why? Because I kept forgetting to register new Gates, and I'm lazy
+            ClassPath path = ClassPath.from(GateRegistry.class.getClassLoader());
+            for (ClassPath.ClassInfo classInfo : path.getTopLevelClassesRecursive("me.dmillerw.io.circuit.gate")) {
+                if (classInfo.getName().contains("BaseGate") || classInfo.getName().contains("GateRegistry"))
+                    continue;
+
+                Class<?> clazz = classInfo.load();
+                if (clazz.getSuperclass() != BaseGate.class)
+                    continue;
+
+                INSTANCE.register((BaseGate) clazz.newInstance());
+            }
+        } catch (Exception e) {
+            FMLLog.bigWarning("Failed to load I/O Gates!!");
+        }
     }
 
     private Map<String, BaseGate> gates = Maps.newHashMap();

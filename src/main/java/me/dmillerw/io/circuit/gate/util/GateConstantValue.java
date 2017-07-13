@@ -15,15 +15,11 @@ public class GateConstantValue extends BaseGate {
 
     @Override
     public void initialize(TileGateContainer parentTile) {
-        super.initialize(parentTile);
-
         parentTile.registerOutput(DataType.NUMBER, "Out");
     }
 
     @Override
     public void calculateOutput(TileGateContainer parentTile) {
-        super.calculateOutput(parentTile);
-
         parentTile.updateOutput("Out", 60);
     }
 }
