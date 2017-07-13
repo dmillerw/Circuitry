@@ -6,13 +6,13 @@ import me.dmillerw.io.circuit.data.DataType;
 /**
  * @author dmillerw
  */
-public class CircuitRedstoneReceiver extends TileToolContainer {
+public class TileRedstoneEmitter extends TileToolContainer {
 
     public static final String KEY_REDSTONE_LEVEL = "RedstoneLevel";
 
     @Override
     public void initialize() {
-        setName("Redstone Emitter");
+        setName("redstone_emitter");
 
         registerOutput(DataType.NUMBER, KEY_REDSTONE_LEVEL);
     }

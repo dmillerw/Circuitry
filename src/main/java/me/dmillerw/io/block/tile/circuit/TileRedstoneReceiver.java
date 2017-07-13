@@ -7,7 +7,7 @@ import me.dmillerw.io.circuit.data.Value;
 /**
  * @author dmillerw
  */
-public class CircuitRedstoneEmitter extends TileToolContainer {
+public class TileRedstoneReceiver extends TileToolContainer {
 
     public static final String KEY_REDSTONE_LEVEL = "RedstoneLevel";
 
@@ -15,7 +15,7 @@ public class CircuitRedstoneEmitter extends TileToolContainer {
 
     @Override
     public void initialize() {
-        setName("Redstone Emitter");
+        setName("redstone_receiver");
 
         registerInput(DataType.NUMBER, KEY_REDSTONE_LEVEL);
     }

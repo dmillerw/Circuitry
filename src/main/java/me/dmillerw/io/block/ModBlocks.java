@@ -1,9 +1,6 @@
 package me.dmillerw.io.block;
 
 import me.dmillerw.io.block.item.ItemGateContainer;
-import me.dmillerw.io.block.tile.circuit.BlockConstantValue;
-import me.dmillerw.io.block.tile.circuit.BlockRedstoneEmitter;
-import me.dmillerw.io.block.tile.circuit.BlockRedstoneReceiver;
 import me.dmillerw.io.lib.ModInfo;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -26,10 +23,6 @@ public class ModBlocks {
     public static final BlockRedstoneEmitter redstone_emitter = null;
     @GameRegistry.ObjectHolder(ModInfo.MOD_ID + ":redstone_emitter")
     public static final ItemBlock redstone_emitter_item = null;
-
-    public static final BlockConstantValue constant_value = null;
-    @GameRegistry.ObjectHolder(ModInfo.MOD_ID + ":constant_value")
-    public static final ItemBlock constant_value_item = null;
 
     public static final BlockGateContainer gate = null;
     @GameRegistry.ObjectHolder(ModInfo.MOD_ID + ":gate")
@@ -55,7 +48,6 @@ public class ModBlocks {
             event.getRegistry().registerAll(
                     new BlockCable().setRegistryName(ModInfo.MOD_ID, "cable"),
                     new BlockRedstoneEmitter().setRegistryName(ModInfo.MOD_ID, "redstone_emitter"),
-                    new BlockConstantValue().setRegistryName(ModInfo.MOD_ID, "constant_value"),
                     new BlockGateContainer().setRegistryName(ModInfo.MOD_ID, "gate"),
                     new BlockRedstoneReceiver().setRegistryName(ModInfo.MOD_ID, "redstone_receiver"),
                     new BlockScreen().setRegistryName(ModInfo.MOD_ID, "screen"),
@@ -68,7 +60,6 @@ public class ModBlocks {
             event.getRegistry().registerAll(
                     new ItemBlock(ModBlocks.cable).setRegistryName(ModInfo.MOD_ID, "cable"),
                     new ItemBlock(ModBlocks.redstone_emitter).setRegistryName(ModInfo.MOD_ID, "redstone_emitter"),
-                    new ItemBlock(ModBlocks.constant_value).setRegistryName(ModInfo.MOD_ID, "constant_value"),
                     new ItemGateContainer(ModBlocks.gate).setRegistryName(ModInfo.MOD_ID, "gate"),
                     new ItemBlock(ModBlocks.redstone_receiver).setRegistryName(ModInfo.MOD_ID, "redstone_receiver"),
                     new ItemBlock(ModBlocks.screen).setRegistryName(ModInfo.MOD_ID, "screen"),

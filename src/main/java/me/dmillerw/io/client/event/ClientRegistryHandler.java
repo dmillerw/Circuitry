@@ -1,6 +1,7 @@
 package me.dmillerw.io.client.event;
 
 import me.dmillerw.io.block.ModBlocks;
+import me.dmillerw.io.item.ModItems;
 import me.dmillerw.io.lib.ModInfo;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -26,6 +27,12 @@ public class ClientRegistryHandler {
         registerItemModel(ModBlocks.cable_item);
         registerItemModel(ModBlocks.screen_item);
         registerItemModel(ModBlocks.gate_item);
+        registerItemModel(ModBlocks.redstone_emitter_item);
+        registerItemModel(ModBlocks.redstone_receiver_item);
+        registerItemModel(ModBlocks.player_tracker_item);
+
+        ModelLoader.setCustomModelResourceLocation(ModItems.debugger, 0, new ModelResourceLocation(ModItems.debugger.getRegistryName().toString()));
+        ModelLoader.setCustomModelResourceLocation(ModItems.linking_tool, 0, new ModelResourceLocation(ModItems.linking_tool.getRegistryName().toString()));
     }
 
     private static void forceState(Block block, ModelResourceLocation location) {

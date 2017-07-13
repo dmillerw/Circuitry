@@ -5,9 +5,8 @@ import me.dmillerw.io.block.tile.TileCable;
 import me.dmillerw.io.block.tile.TileGateContainer;
 import me.dmillerw.io.block.tile.TilePlayerTracker;
 import me.dmillerw.io.block.tile.TileScreen;
-import me.dmillerw.io.block.tile.circuit.CircuitConstantValue;
-import me.dmillerw.io.block.tile.circuit.CircuitRedstoneEmitter;
-import me.dmillerw.io.block.tile.circuit.CircuitRedstoneReceiver;
+import me.dmillerw.io.block.tile.circuit.TileRedstoneReceiver;
+import me.dmillerw.io.block.tile.circuit.TileRedstoneEmitter;
 import me.dmillerw.io.circuit.grid.GridRegistry;
 import me.dmillerw.io.lib.ModInfo;
 import me.dmillerw.io.network.GuiHandler;
@@ -29,9 +28,8 @@ public class CommonProxy {
         GameRegistry.registerTileEntity(TileScreen.class, ModInfo.MOD_ID + ":screen");
         GameRegistry.registerTileEntity(TilePlayerTracker.class, ModInfo.MOD_ID + ":player_tracker");
 
-        GameRegistry.registerTileEntity(CircuitRedstoneEmitter.class, ModInfo.MOD_ID + ":redstone_emitter");
-        GameRegistry.registerTileEntity(CircuitRedstoneReceiver.class, ModInfo.MOD_ID + ":redstone_receiver");
-        GameRegistry.registerTileEntity(CircuitConstantValue.class, ModInfo.MOD_ID + ":constant_value");
+        GameRegistry.registerTileEntity(TileRedstoneReceiver.class, ModInfo.MOD_ID + ":redstone_emitter");
+        GameRegistry.registerTileEntity(TileRedstoneEmitter.class, ModInfo.MOD_ID + ":redstone_receiver");
 
         NetworkRegistry.INSTANCE.registerGuiHandler(IO.INSTANCE, new GuiHandler());
     }

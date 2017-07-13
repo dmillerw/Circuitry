@@ -1,0 +1,8 @@
+{
+  "parent": "block/cube_bottom_top",
+  "textures": {
+    "top": "io:blocks/machine_top_in",
+    "bottom": "io:blocks/machine_top_in",
+    "side": "io:blocks/redstone_side"
+  }
+}

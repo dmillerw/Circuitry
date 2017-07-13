@@ -1,5 +1,6 @@
-package me.dmillerw.io.block.tile.circuit;
+package me.dmillerw.io.block;
 
+import me.dmillerw.io.block.tile.circuit.TileRedstoneEmitter;
 import me.dmillerw.io.block.tile.core.BlockToolContainer;
 import me.dmillerw.io.lib.ModInfo;
 import me.dmillerw.io.lib.ModTab;
@@ -31,7 +32,7 @@ public class BlockRedstoneReceiver extends BlockToolContainer implements ITileEn
         super.neighborChanged(state, worldIn, pos, blockIn, fromPos);
 
         if (!worldIn.isRemote) {
-            CircuitRedstoneReceiver tile = (CircuitRedstoneReceiver) worldIn.getTileEntity(pos);
+            TileRedstoneEmitter tile = (TileRedstoneEmitter) worldIn.getTileEntity(pos);
             tile.updateLevel();
         }
     }
@@ -39,6 +40,6 @@ public class BlockRedstoneReceiver extends BlockToolContainer implements ITileEn
     @Nullable
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta) {
-        return new CircuitRedstoneReceiver();
+        return new TileRedstoneEmitter();
     }
 }

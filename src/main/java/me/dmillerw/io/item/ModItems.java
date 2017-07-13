@@ -13,7 +13,6 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 @GameRegistry.ObjectHolder(ModInfo.MOD_ID)
 public class ModItems {
 
-    public static final ItemConfigurator configurator = null;
     public static final ItemDebugger debugger = null;
     public static final ItemLinkingTool linking_tool = null;
 
@@ -23,7 +22,6 @@ public class ModItems {
         @SubscribeEvent
         public static void registerItems(RegistryEvent.Register<Item> event) {
             event.getRegistry().registerAll(
-                    new ItemConfigurator().setRegistryName(ModInfo.MOD_ID, "configurator"),
                     new ItemDebugger().setRegistryName(ModInfo.MOD_ID, "debugger"),
                     new ItemLinkingTool().setRegistryName(ModInfo.MOD_ID, "linking_tool")
             );

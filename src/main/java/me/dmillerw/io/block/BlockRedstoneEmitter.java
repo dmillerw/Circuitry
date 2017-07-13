@@ -1,5 +1,6 @@
-package me.dmillerw.io.block.tile.circuit;
+package me.dmillerw.io.block;
 
+import me.dmillerw.io.block.tile.circuit.TileRedstoneReceiver;
 import me.dmillerw.io.block.tile.core.BlockToolContainer;
 import me.dmillerw.io.lib.ModInfo;
 import me.dmillerw.io.lib.ModTab;
@@ -35,19 +36,19 @@ public class BlockRedstoneEmitter extends BlockToolContainer implements ITileEnt
 
     @Override
     public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
-        CircuitRedstoneEmitter circuit = (CircuitRedstoneEmitter) blockAccess.getTileEntity(pos);
+        TileRedstoneReceiver circuit = (TileRedstoneReceiver) blockAccess.getTileEntity(pos);
         return MathHelper.clamp(circuit.redstoneLevel, 0, 15);
     }
 
     @Override
     public int getStrongPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
-        CircuitRedstoneEmitter circuit = (CircuitRedstoneEmitter) blockAccess.getTileEntity(pos);
+        TileRedstoneReceiver circuit = (TileRedstoneReceiver) blockAccess.getTileEntity(pos);
         return MathHelper.clamp(circuit.redstoneLevel, 0, 15);
     }
 
     @Nullable
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta) {
-        return new CircuitRedstoneEmitter();
+        return new TileRedstoneReceiver();
     }
 }

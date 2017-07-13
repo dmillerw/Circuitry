@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "normal": {
+      "model": "io:redstone_emitter"
+    }
+  }
+}
