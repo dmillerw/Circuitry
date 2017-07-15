@@ -54,7 +54,7 @@ public class GuiSelectOutput extends GuiScreen {
         this.destOutputButtons = new GuiButtonExt[MAX_BUTTONS];
 
         for (int i = 0; i < MAX_BUTTONS; i++) {
-            GuiButtonExt output = new GuiButtonExt(i, guiLeft + 27, guiTop + 47 + distance * i, 83, 14, "");
+            GuiButtonExt output = new GuiButtonExt(i, guiLeft + 8, guiTop + 47 + distance * i, 83, 14, "");
             this.destOutputButtons[i] = output;
 
             if (i < destOutputPorts.length) {
