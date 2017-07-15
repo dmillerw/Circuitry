@@ -3,7 +3,8 @@ package me.dmillerw.io.client.gui.widget;
 import me.dmillerw.io.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
-import scala.actors.threadpool.Arrays;
+
+import java.util.Collections;
 
 /**
  * @author dmillerw
@@ -27,6 +28,6 @@ public class GuiButtonTooltip extends GuiButtonExt {
 
     public void drawTooltip(Minecraft mc, int mouseX, int mouseY) {
         if (enabled && isMouseOver() && tooltip != null && !tooltip.isEmpty())
-            RenderUtil.drawHoveringText(mc.displayWidth, mc.displayHeight, Arrays.asList(new String[] { tooltip }), mouseX, mouseY, mc.fontRenderer);
+            RenderUtil.drawHoveringText(mc.displayWidth, mc.displayHeight, Collections.singletonList(tooltip), mouseX, mouseY, mc.fontRenderer);
     }
 }
