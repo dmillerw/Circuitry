@@ -2,6 +2,7 @@ package me.dmillerw.io.client.gui;
 
 import me.dmillerw.io.block.tile.core.TileToolContainer;
 import me.dmillerw.io.circuit.data.Port;
+import me.dmillerw.io.client.gui.widget.GuiButtonTooltip;
 import me.dmillerw.io.item.ItemLinkingTool;
 import me.dmillerw.io.lib.ModInfo;
 import me.dmillerw.io.network.PacketHandler;
@@ -54,7 +55,7 @@ public class GuiSelectOutput extends GuiScreen {
         this.destOutputButtons = new GuiButtonExt[MAX_BUTTONS];
 
         for (int i = 0; i < MAX_BUTTONS; i++) {
-            GuiButtonExt output = new GuiButtonExt(i, guiLeft + 8, guiTop + 47 + distance * i, 83, 14, "");
+            GuiButtonTooltip output = new GuiButtonTooltip(i, guiLeft + 8, guiTop + 47 + distance * i, 83, 14, "");
             this.destOutputButtons[i] = output;
 
             if (i < destOutputPorts.length) {
@@ -69,6 +70,7 @@ public class GuiSelectOutput extends GuiScreen {
 
                 output.displayString = display;
                 output.enabled = enabled;
+                output.setTooltip(destOutputPorts[i].getType().toString());
             } else {
                 output.enabled = false;
             }
@@ -90,6 +92,11 @@ public class GuiSelectOutput extends GuiScreen {
         fontRenderer.drawString("X: " + pos.getX() + ", Y: " + pos.getY() + ", Z: " + pos.getZ(), guiLeft + 8, guiTop + 34, 4210752);
 
         super.drawScreen(mouseX, mouseY, partialTicks);
+
+        for (int i = 0; i < this.buttonList.size(); ++i) {
+            GuiButton button = this.buttonList.get(i);
+            if (button instanceof GuiButtonTooltip) ((GuiButtonTooltip) button).drawTooltip(mc, mouseX, mouseY);
+        }
     }
 
     @Override

@@ -2,6 +2,7 @@ package me.dmillerw.io.client.gui;
 
 import me.dmillerw.io.block.tile.core.TileToolContainer;
 import me.dmillerw.io.circuit.data.Port;
+import me.dmillerw.io.client.gui.widget.GuiButtonTooltip;
 import me.dmillerw.io.lib.ModInfo;
 import me.dmillerw.io.network.PacketHandler;
 import me.dmillerw.io.network.packet.server.SResetConnection;
@@ -54,7 +55,7 @@ public class GuiSelectInput extends GuiScreen {
         this.destResetButtons = new GuiButtonExt[MAX_BUTTONS];
 
         for (int i = 0; i < MAX_BUTTONS; i++) {
-            GuiButtonExt input = new GuiButtonExt(i, guiLeft + 27, guiTop + 47 + distance * i, 83, 14, "");
+            GuiButtonTooltip input = new GuiButtonTooltip(i, guiLeft + 27, guiTop + 47 + distance * i, 83, 14, "");
             this.destInputButtons[i] = input;
 
             if (i < destInputPorts.length) {
@@ -69,13 +70,15 @@ public class GuiSelectInput extends GuiScreen {
 
                 input.displayString = display;
                 input.enabled = enabled;
+
+                input.setTooltip(destInputPorts[i].getType().toString());
             } else {
                 input.enabled = false;
             }
 
             this.buttonList.add(input);
 
-            GuiButtonExt reset = new GuiButtonExt(MAX_BUTTONS + i, guiLeft + 8, guiTop + 47 + distance * i, 14, 14, "R");
+            GuiButtonTooltip reset = new GuiButtonTooltip(MAX_BUTTONS + i, guiLeft + 8, guiTop + 47 + distance * i, 14, 14, "R");
             this.destResetButtons[i] = reset;
 
             this.buttonList.add(reset);
@@ -95,6 +98,11 @@ public class GuiSelectInput extends GuiScreen {
         fontRenderer.drawString("X: " + pos.getX() + ", Y: " + pos.getY() + ", Z: " + pos.getZ(), guiLeft + 8, guiTop + 34, 4210752);
 
         super.drawScreen(mouseX, mouseY, partialTicks);
+
+        for (int i = 0; i < this.buttonList.size(); ++i) {
+            GuiButton button = this.buttonList.get(i);
+            if (button instanceof GuiButtonTooltip) ((GuiButtonTooltip) button).drawTooltip(mc, mouseX, mouseY);
+        }
     }
 
     @Override
