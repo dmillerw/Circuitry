@@ -22,10 +22,10 @@ import java.io.IOException;
  */
 public class GuiSelectInput extends GuiScreen {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(ModInfo.MOD_ID, "textures/gui/linking_input_debug.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(ModInfo.MOD_ID, "textures/gui/linking_input.png");
 
-    private static final int WIDTH = 118;
-    private static final int HEIGHT = 239;
+    private static final int WIDTH = 255;
+    private static final int HEIGHT = 144;
     private static final int MAX_BUTTONS = 10;
 
     private TileToolContainer circuitTile;
@@ -48,40 +48,45 @@ public class GuiSelectInput extends GuiScreen {
         this.guiLeft = (this.width - WIDTH) / 2;
         this.guiTop = (this.height - HEIGHT) / 2;
 
-        final int distance = 19;
+        final int xDistance = 107;
+        final int yDistance = 19;
 
         this.destInputPorts = circuitTile.inputs.values().toArray(new Port[0]);
         this.destInputButtons = new GuiButtonExt[MAX_BUTTONS];
         this.destResetButtons = new GuiButtonExt[MAX_BUTTONS];
 
-        for (int i = 0; i < MAX_BUTTONS; i++) {
-            GuiButtonTooltip input = new GuiButtonTooltip(i, guiLeft + 27, guiTop + 47 + distance * i, 83, 14, "");
-            this.destInputButtons[i] = input;
+        for (int i = 0; i < 5; ++i) {
+            for (int j = 0; j < 2; ++j) {
+                int index = j + i * 2;
 
-            if (i < destInputPorts.length) {
-                final String name = destInputPorts[i].getName();
-                String display = name;
-                boolean enabled = true;
+                GuiButtonTooltip input = new GuiButtonTooltip(index, guiLeft + 27 + xDistance * j, guiTop + 47 + yDistance * i, 83, 14, "");
+                this.destInputButtons[index] = input;
 
-                if (circuitTile.isPortListening(name)) {
-                    display = TextFormatting.RED + display;
-                    enabled = false;
+                if (index < destInputPorts.length) {
+                    final String name = destInputPorts[index].getName();
+                    String display = name;
+                    boolean enabled = true;
+
+                    if (circuitTile.isPortListening(name)) {
+                        display = TextFormatting.RED + display;
+                        enabled = false;
+                    }
+
+                    input.displayString = display;
+                    input.enabled = enabled;
+
+                    input.setTooltip(destInputPorts[index].getType().toString());
+                } else {
+                    input.enabled = false;
                 }
 
-                input.displayString = display;
-                input.enabled = enabled;
+                this.buttonList.add(input);
 
-                input.setTooltip(destInputPorts[i].getType().toString());
-            } else {
-                input.enabled = false;
+                GuiButtonTooltip reset = new GuiButtonTooltip(MAX_BUTTONS + index, guiLeft + 8 + xDistance * j, guiTop + 47 + yDistance * i, 14, 14, "R");
+                this.destResetButtons[index] = reset;
+
+                this.buttonList.add(reset);
             }
-
-            this.buttonList.add(input);
-
-            GuiButtonTooltip reset = new GuiButtonTooltip(MAX_BUTTONS + i, guiLeft + 8, guiTop + 47 + distance * i, 14, 14, "R");
-            this.destResetButtons[i] = reset;
-
-            this.buttonList.add(reset);
         }
     }
 

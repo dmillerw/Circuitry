@@ -23,10 +23,10 @@ import java.io.IOException;
  */
 public class GuiSelectOutput extends GuiScreen {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(ModInfo.MOD_ID, "textures/gui/linking_output_debug.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(ModInfo.MOD_ID, "textures/gui/linking_output.png");
 
-    private static final int WIDTH = 98;
-    private static final int HEIGHT = 239;
+    private static final int WIDTH = 187;
+    private static final int HEIGHT = 144;
     private static final int MAX_BUTTONS = 10;
 
     private TileToolContainer circuitTile;
@@ -49,33 +49,38 @@ public class GuiSelectOutput extends GuiScreen {
         this.guiLeft = (this.width - WIDTH) / 2;
         this.guiTop = (this.height - HEIGHT) / 2;
 
-        final int distance = 19;
+        final int xDistance = 88;
+        final int yDstance = 19;
 
         this.destOutputPorts = circuitTile.outputs.values().toArray(new Port[0]);
         this.destOutputButtons = new GuiButtonExt[MAX_BUTTONS];
 
-        for (int i = 0; i < MAX_BUTTONS; i++) {
-            GuiButtonTooltip output = new GuiButtonTooltip(i, guiLeft + 8, guiTop + 47 + distance * i, 83, 14, "");
-            this.destOutputButtons[i] = output;
+        for (int i = 0; i < 5; ++i) {
+            for (int j = 0; j < 2; ++j) {
+                int index = j + i * 2;
 
-            if (i < destOutputPorts.length) {
-                final Port port = destOutputPorts[i];
-                String display = port.getName();
-                boolean enabled = true;
+                GuiButtonTooltip output = new GuiButtonTooltip(index, guiLeft + 8 + xDistance * j, guiTop + 47 + yDstance * i, 83, 14, "");
+                this.destOutputButtons[index] = output;
 
-                if (port.getType() != ItemLinkingTool.getTargetDataType(linkingTool)) {
-                    display = TextFormatting.RED + display;
-                    enabled = false;
+                if (index < destOutputPorts.length) {
+                    final Port port = destOutputPorts[index];
+                    String display = port.getName();
+                    boolean enabled = true;
+
+                    if (port.getType() != ItemLinkingTool.getTargetDataType(linkingTool)) {
+                        display = TextFormatting.RED + display;
+                        enabled = false;
+                    }
+
+                    output.displayString = display;
+                    output.enabled = enabled;
+                    output.setTooltip(destOutputPorts[index].getType().toString());
+                } else {
+                    output.enabled = false;
                 }
 
-                output.displayString = display;
-                output.enabled = enabled;
-                output.setTooltip(destOutputPorts[i].getType().toString());
-            } else {
-                output.enabled = false;
+                this.buttonList.add(output);
             }
-
-            this.buttonList.add(output);
         }
     }
 
