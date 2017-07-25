@@ -1,6 +1,6 @@
 package me.dmillerw.io.item;
 
-import me.dmillerw.io.block.tile.core.TileToolContainer;
+import me.dmillerw.io.api.IConfigurable;
 import me.dmillerw.io.lib.ModInfo;
 import me.dmillerw.io.lib.ModTab;
 import me.dmillerw.io.network.GuiHandler;
@@ -32,8 +32,8 @@ public class ItemDebugger extends Item {
     @Override
     public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
         TileEntity tile = world.getTileEntity(pos);
-        if (tile != null && tile instanceof TileToolContainer) {
-            GuiHandler.Gui.DEBUGGER.openGui(player, pos);
+        if (tile != null && tile instanceof IConfigurable) {
+            GuiHandler.Gui.CONFIG.openGui(player, pos);
         }
 
         return world.isRemote ? EnumActionResult.PASS : EnumActionResult.SUCCESS;

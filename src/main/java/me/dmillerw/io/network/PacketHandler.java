@@ -1,14 +1,8 @@
 package me.dmillerw.io.network;
 
 import me.dmillerw.io.lib.ModInfo;
-import me.dmillerw.io.network.packet.client.CAddListener;
-import me.dmillerw.io.network.packet.client.COpenOutputGui;
-import me.dmillerw.io.network.packet.client.CRemoveListener;
-import me.dmillerw.io.network.packet.client.CUpdatePorts;
-import me.dmillerw.io.network.packet.server.SCreateConnection;
-import me.dmillerw.io.network.packet.server.SRequestOutputGui;
-import me.dmillerw.io.network.packet.server.SResetConnection;
-import me.dmillerw.io.network.packet.server.SUpdateLinkingTool;
+import me.dmillerw.io.network.packet.client.*;
+import me.dmillerw.io.network.packet.server.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.management.PlayerChunkMap;
@@ -55,11 +49,13 @@ public class PacketHandler {
         registerServerMessage(SResetConnection.class, SResetConnection.Handler.class);
         registerServerMessage(SUpdateLinkingTool.class, SUpdateLinkingTool.Handler.class);
         registerServerMessage(SRequestOutputGui.class, SRequestOutputGui.Handler.class);
+        registerServerMessage(SUpdateConfig.class, SUpdateConfig.Handler.class);
 
         registerClientMessage(CUpdatePorts.class, CUpdatePorts.Handler.class);
         registerClientMessage(CAddListener.class, CAddListener.Handler.class);
         registerClientMessage(CRemoveListener.class, CRemoveListener.Handler.class);
         registerClientMessage(COpenOutputGui.class, COpenOutputGui.Handler.class);
+        registerClientMessage(CUpdateConfig.class, CUpdateConfig.Handler.class);
     }
 
     public static void sendToAllWatching(IMessage message, TileEntity tile) {

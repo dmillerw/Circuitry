@@ -1,10 +1,12 @@
 package me.dmillerw.io.network;
 
 import me.dmillerw.io.IO;
+import me.dmillerw.io.api.IConfigurable;
 import me.dmillerw.io.block.tile.core.TileToolContainer;
 import me.dmillerw.io.client.gui.GuiDebugger;
 import me.dmillerw.io.client.gui.GuiSelectInput;
 import me.dmillerw.io.client.gui.GuiSelectOutput;
+import me.dmillerw.io.client.gui.config.GuiConfig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -22,6 +24,7 @@ public class GuiHandler implements IGuiHandler {
     public static enum Gui {
 
         DEBUGGER,
+        CONFIG,
         SELECT_INPUT,
         SELECT_OUTPUT;
 
@@ -47,6 +50,8 @@ public class GuiHandler implements IGuiHandler {
         switch (Gui.values()[id]) {
             case DEBUGGER:
                 return new GuiDebugger((TileToolContainer) tile);
+            case CONFIG:
+                return new GuiConfig((IConfigurable) tile);
             case SELECT_INPUT:
                 return new GuiSelectInput((TileToolContainer) tile);
             case SELECT_OUTPUT:

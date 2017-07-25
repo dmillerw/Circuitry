@@ -4,15 +4,20 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import me.dmillerw.io.api.IConfigurable;
 import me.dmillerw.io.api.IGridMember;
 import me.dmillerw.io.circuit.data.DataType;
 import me.dmillerw.io.circuit.data.NullValue;
 import me.dmillerw.io.circuit.data.Port;
 import me.dmillerw.io.circuit.data.Value;
 import me.dmillerw.io.circuit.grid.ConnectivityGrid;
+import me.dmillerw.io.client.gui.config.element.Element;
+import me.dmillerw.io.client.gui.config.element.Label;
+import me.dmillerw.io.client.gui.config.element.data.TextField;
 import me.dmillerw.io.network.PacketHandler;
 import me.dmillerw.io.network.packet.client.CAddListener;
 import me.dmillerw.io.network.packet.client.CRemoveListener;
+import me.dmillerw.io.network.packet.client.CUpdateConfig;
 import me.dmillerw.io.network.packet.client.CUpdatePorts;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -20,12 +25,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static net.minecraftforge.common.util.Constants.NBT.TAG_COMPOUND;
@@ -33,7 +37,7 @@ import static net.minecraftforge.common.util.Constants.NBT.TAG_COMPOUND;
 /**
  * @author dmillerw
  */
-public abstract class TileToolContainer extends TileCore implements ITickable, IGridMember {
+public abstract class TileToolContainer extends TileCore implements ITickable, IGridMember, IConfigurable {
 
     private static final String NBT_KEY_UUID_MOST = "UUID_MOST_SIG";
     private static final String NBT_KEY_UUID_LEAST = "UUID_LEAST_SIG";
@@ -47,7 +51,8 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
     private UUID uuid = UUID.randomUUID();
 
     private String name;
-    private String nickname;
+
+    private NBTTagCompound config = new NBTTagCompound();
 
     private boolean initialized = false;
 
@@ -135,6 +140,10 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
         this.name = name;
     }
 
+    public final String getNickname() {
+        return config.getString("Nickname");
+    }
+
     public final void registerInput(DataType type, String... keys) {
         for (String key : keys) registerInput(type, key);
     }
@@ -192,8 +201,6 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
         compound.setLong(NBT_KEY_UUID_MOST, uuid.getMostSignificantBits());
         compound.setLong(NBT_KEY_UUID_LEAST, uuid.getLeastSignificantBits());
 
-        compound.setString("Nickname", nickname == null ? "" : nickname);
-
         // Update Queue
         NBTTagList queue = new NBTTagList();
         for (Map.Entry<String, Value> entry : queuedUpdates.entrySet()) {
@@ -242,6 +249,8 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
         }
 
         compound.setTag(NBT_KEY_LISTENERS, listening);
+
+        compound.setTag("Config", config);
     }
 
     @Override
@@ -249,8 +258,6 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
         super.readFromDisk(compound);
 
         uuid = new UUID(compound.getLong(NBT_KEY_UUID_MOST), compound.getLong(NBT_KEY_UUID_LEAST));
-
-        nickname = compound.getString("Nickname");
 
         // Update Queue
         NBTTagList queue = compound.getTagList("QueuedUpdates", TAG_COMPOUND);
@@ -288,6 +295,8 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
 
             listeners.put(input, Pair.of(uuid, output));
         }
+
+        config = compound.getCompoundTag("Config");
     }
 
     public UUID getUuid() {
@@ -296,14 +305,6 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
 
     public String getName() {
         return this.name;
-    }
-
-    public String getNickname() {
-        return this.nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
     }
 
     public boolean hasInputs() {
@@ -450,6 +451,38 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
 
         for (String input : removedNodes) {
             removeListener(input);
+        }
+    }
+
+    /* ICONFIGURABLE */
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void getElements(LinkedList<Element> elements) {
+        elements.add(Label.of(4210752, "Bacon ipsum dolor amet beef alcatra burgdoggen kielbasa. Chuck shank bacon biltong tri-tip frankfurter bresaola rump doner meatball tail ground round kevin brisket beef ribs. Swine turducken jowl, pastrami tongue pig chicken filet mignon turkey tenderloin venison bacon ground round. Corned beef drumstick turducken pork landjaeger turkey.\n" +
+                "\n" +
+                "Meatloaf andouille burgdoggen bacon. Jerky cow flank pig bresaola prosciutto venison. Kevin sirloin beef short loin ribeye. T-bone kielbasa prosciutto shoulder pork belly pork jowl tongue boudin chicken kevin tenderloin leberkas pastrami ground round. Sausage corned beef boudin cupim strip steak. Cupim t-bone pancetta, porchetta leberkas ham kielbasa ribeye shank hamburger filet mignon corned beef pork loin.\n" +
+                "\n" +
+                "Rump pastrami ribeye, beef turducken meatball doner shankle landjaeger corned beef kielbasa shank. Alcatra pork belly salami, pork chop leberkas ground round filet mignon shoulder chicken tenderloin. Sirloin doner shoulder leberkas picanha kevin. Pork chop kielbasa salami, pancetta pig jerky corned beef venison landjaeger fatback kevin pork loin bacon. Alcatra flank corned beef pork. Boudin landjaeger venison, short loin ground round pig burgdoggen fatback bacon bresaola alcatra ribeye shoulder.").setMultiline());
+        elements.add(TextField.of("Nickname", 12).setLabel("Nickname:"));
+    }
+
+    @Override
+    public NBTTagCompound getConfiguration() {
+        return config;
+    }
+
+    @Override
+    public void handleUpdate(NBTTagCompound tag) {
+        for (String key : tag.getKeySet())
+            this.config.setTag(key, tag.getTag(key));
+
+        if (!world.isRemote) {
+            CUpdateConfig packet = new CUpdateConfig();
+            packet.target = this.pos;
+            packet.tag = this.config;
+
+            PacketHandler.sendToAllWatching(packet, this);
         }
     }
 }

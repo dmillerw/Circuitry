@@ -1,9 +1,12 @@
 package me.dmillerw.io.item;
 
+import me.dmillerw.io.api.IConfigurable;
 import me.dmillerw.io.lib.ModInfo;
 import me.dmillerw.io.lib.ModTab;
+import me.dmillerw.io.network.GuiHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -28,47 +31,12 @@ public class ItemConfigurator extends Item {
 
     @Override
     public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
-        /*if (!world.isRemote) {
+        if (!world.isRemote) {
             TileEntity tile = world.getTileEntity(pos);
-            if (tile != null && tile instanceof TileToolContainer) {
-                if (((TileToolContainer) tile).inputs.isEmpty())
-                    return EnumActionResult.PASS;
-
-                if (player.isSneaking()) {
-                    System.out.println("");
-                    return EnumActionResult.SUCCESS;
-                }
-
-                Set<IGridMember> checked = Sets.newHashSet();
-                Set<IGridMember> connected = Sets.newHashSet();
-
-                for (IGridMember member : ConnectivityGrid.getNeighbors((IGridMember) tile, false)) {
-                    if (member.getMemberType() == ConnectivityGrid.MemberType.CABLE) {
-                        connected.addAll(member.getGrid().crawlGrid(member, checked, (IGridMember)tile, true));
-                    }
-                }
-
-                Map<BlockPos, Set<Pair<String, DataType>>> circuits = Maps.newHashMap();
-
-                connected.forEach(m -> {
-                    if (m.getMemberType() == ConnectivityGrid.MemberType.NODE) {
-                        if (m instanceof TileToolContainer && !((TileToolContainer) m).outputs.isEmpty()) {
-                            Set<Pair<String, DataType>> outputs = Sets.newHashSet();
-                            ((TileToolContainer) m).outputs.forEach((o, p) -> outputs.add(Pair.of(o, p.type)));
-                            circuits.put(((TileToolContainer) m).getPos(), outputs);
-                        }
-                    }
-                });
-
-                circuits.remove(tile.getPos());
-
-                COpenConfiguratorGui packet = new COpenConfiguratorGui();
-                packet.networkMembers = circuits;
-                packet.blockPos = pos;
-
-                PacketHandler.INSTANCE.sendTo(packet, (EntityPlayerMP) player);
+            if (tile != null && tile instanceof IConfigurable) {
+                GuiHandler.Gui.CONFIG.openGui(player, pos);
             }
-        }*/
+        }
 
         return world.isRemote ? EnumActionResult.PASS : EnumActionResult.SUCCESS;
     }

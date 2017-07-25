@@ -95,9 +95,12 @@ public class GuiSelectInput extends GuiScreen {
         mc.getTextureManager().bindTexture(TEXTURE);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, WIDTH, HEIGHT);
 
-        fontRenderer.drawString(circuitTile.getName(), guiLeft + 8, guiTop + 8, 4210752);
-
-        fontRenderer.drawString(circuitTile.getNickname(), guiLeft + 8, guiTop + 21, 4210752);
+        String nickname = circuitTile.getNickname();
+        if (nickname != null && !nickname.isEmpty()) {
+            fontRenderer.drawString(nickname + " (" + circuitTile.getName() + ")", guiLeft + 8, guiTop + 8, 4210752);
+        } else {
+            fontRenderer.drawString(circuitTile.getName(), guiLeft + 8, guiTop + 21, 4210752);
+        }
 
         final BlockPos pos = circuitTile.getPos();
         fontRenderer.drawString("X: " + pos.getX() + ", Y: " + pos.getY() + ", Z: " + pos.getZ(), guiLeft + 8, guiTop + 34, 4210752);
