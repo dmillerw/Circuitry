@@ -29,11 +29,6 @@ public class GateConstantValue extends BaseGate {
 
     @Override
     public void calculateOutput(TileGateContainer parentTile) {
-        String value = parentTile.getConfiguration().getString("Value");
-        if (!value.isEmpty()) {
-            parentTile.updateOutput("Out", Double.parseDouble(value));
-        } else {
-            parentTile.updateOutput("Out", 0);
-        }
+        parentTile.updateOutput("Out", Double.parseDouble(parentTile.getConfiguration().getString("Value", "0")));
     }
 }

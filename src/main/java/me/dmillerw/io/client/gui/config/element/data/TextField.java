@@ -43,13 +43,19 @@ public class TextField extends ElementWithValue<String> {
     }
 
     @Override
+    public ElementWithValue<String> setValue(String value) {
+        this.backingElement.setText(value);
+        return this;
+    }
+
+    @Override
     public NBTBase toNBTTag() {
         return new NBTTagString(getValue());
     }
 
     @Override
     public void loadFromNBTTag(NBTBase tag) {
-        backingElement.setText(((NBTTagString)tag).getString());
+        backingElement.setText(((NBTTagString) tag).getString());
     }
 
     @Override

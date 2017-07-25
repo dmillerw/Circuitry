@@ -93,7 +93,7 @@ public class GuiConfig extends GuiScreen {
         if (configurable.getConfiguration() != null) {
             elements.forEach((e) -> {
                 if (e instanceof ElementWithValue) {
-                    NBTBase tag = configurable.getConfiguration().getTag(((ElementWithValue) e).key);
+                    NBTBase tag = configurable.getConfiguration().getRawTag(((ElementWithValue) e).key);
                     if (tag != null) {
                         ((ElementWithValue) e).loadFromNBTTag(tag);
                     }

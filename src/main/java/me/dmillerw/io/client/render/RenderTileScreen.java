@@ -57,7 +57,11 @@ public class RenderTileScreen extends TileEntitySpecialRenderer<TileScreen> {
         String string = "0";
         if (te.inputs.size() > 0) {
             Port port = te.getInput("Value");
-            string = port.getNumber().toString();
+            if (te.getConfiguration().getBoolean("Round", true)) {
+                string = Integer.toString(((int) Math.round(port.getNumber().doubleValue())));
+            } else {
+                string = port.getNumber().toString();
+            }
         }
 
         GlStateManager.color(1, 1, 1, 1);

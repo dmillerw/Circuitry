@@ -1,5 +1,6 @@
 package me.dmillerw.io.api;
 
+import me.dmillerw.io.client.gui.config.Config;
 import me.dmillerw.io.client.gui.config.element.Element;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
@@ -13,8 +14,9 @@ import java.util.LinkedList;
 public interface IConfigurable {
 
     @SideOnly(Side.CLIENT)
-    public void getElements(LinkedList<Element> elements);
+    void getElements(LinkedList<Element> elements);
 
-    public NBTTagCompound getConfiguration();
-    public void onConfigurationUpdate(NBTTagCompound tag);
+    Config getConfiguration();
+
+    void onConfigurationUpdate(NBTTagCompound tag);
 }

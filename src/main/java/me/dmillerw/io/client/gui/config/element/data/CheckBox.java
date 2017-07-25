@@ -46,6 +46,12 @@ public class CheckBox extends ElementWithValue<Boolean> {
     }
 
     @Override
+    public ElementWithValue<Boolean> setValue(Boolean value) {
+        this.value = value;
+        return this;
+    }
+
+    @Override
     public void loadFromNBTTag(NBTBase tag) {
         value = ((NBTTagByte)tag).getByte() > 0;
     }

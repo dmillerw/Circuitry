@@ -17,6 +17,8 @@ public abstract class ElementWithValue<V> extends Element {
 
     public abstract V getValue();
 
+    public abstract ElementWithValue<V> setValue(V value);
+
     public abstract void loadFromNBTTag(NBTBase tag);
     public abstract NBTBase toNBTTag();
 }

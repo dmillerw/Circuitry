@@ -11,8 +11,8 @@ import me.dmillerw.io.circuit.data.NullValue;
 import me.dmillerw.io.circuit.data.Port;
 import me.dmillerw.io.circuit.data.Value;
 import me.dmillerw.io.circuit.grid.ConnectivityGrid;
+import me.dmillerw.io.client.gui.config.Config;
 import me.dmillerw.io.client.gui.config.element.Element;
-import me.dmillerw.io.client.gui.config.element.data.CheckBox;
 import me.dmillerw.io.client.gui.config.element.data.TextField;
 import me.dmillerw.io.network.PacketHandler;
 import me.dmillerw.io.network.packet.client.CAddListener;
@@ -52,7 +52,7 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
 
     private String name;
 
-    private NBTTagCompound config = new NBTTagCompound();
+    private Config config = new Config(new NBTTagCompound());
 
     private boolean initialized = false;
 
@@ -141,7 +141,7 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
     }
 
     public final String getNickname() {
-        return config.getString("Nickname");
+        return config.getString("Nickname", "");
     }
 
     public final void registerInput(DataType type, String... keys) {
@@ -250,7 +250,7 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
 
         compound.setTag(NBT_KEY_LISTENERS, listening);
 
-        compound.setTag("Config", config);
+        compound.setTag("Config", config.getTag());
     }
 
     @Override
@@ -296,7 +296,7 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
             listeners.put(input, Pair.of(uuid, output));
         }
 
-        config = compound.getCompoundTag("Config");
+        config = new Config(compound.getCompoundTag("Config"));
     }
 
     public UUID getUuid() {
@@ -459,28 +459,23 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
     @SideOnly(Side.CLIENT)
     @Override
     public void getElements(LinkedList<Element> elements) {
-        elements.add(TextField.of("Nickname", 12).setLabel("Nickname:"));
-        elements.add(CheckBox.construct("Active", false).setLabel("Active"));
-        elements.add(CheckBox.construct("Active", false).setLabel("Active"));
-        elements.add(CheckBox.construct("Active", false).setLabel("Active"));
-        elements.add(CheckBox.construct("Active", false).setLabel("Active"));
-        elements.add(CheckBox.construct("Active", false).setLabel("Active"));
+        elements.add(TextField.of("Nickname", 12).setLabel("Nickname:").setValue("Penis"));
     }
 
     @Override
-    public final NBTTagCompound getConfiguration() {
+    public final Config getConfiguration() {
         return config;
     }
 
     @Override
     public final void onConfigurationUpdate(NBTTagCompound tag) {
         for (String key : tag.getKeySet())
-            this.config.setTag(key, tag.getTag(key));
+            this.config.setRawTag(key, tag.getTag(key));
 
         if (!world.isRemote) {
             CUpdateConfig packet = new CUpdateConfig();
             packet.target = this.pos;
-            packet.tag = this.config;
+            packet.tag = this.config.getTag();
 
             PacketHandler.sendToAllWatching(packet, this);
         }
