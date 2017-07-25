@@ -12,6 +12,7 @@ import me.dmillerw.io.circuit.data.Port;
 import me.dmillerw.io.circuit.data.Value;
 import me.dmillerw.io.circuit.grid.ConnectivityGrid;
 import me.dmillerw.io.client.gui.config.element.Element;
+import me.dmillerw.io.client.gui.config.element.data.CheckBox;
 import me.dmillerw.io.client.gui.config.element.data.TextField;
 import me.dmillerw.io.network.PacketHandler;
 import me.dmillerw.io.network.packet.client.CAddListener;
@@ -459,6 +460,11 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
     @Override
     public void getElements(LinkedList<Element> elements) {
         elements.add(TextField.of("Nickname", 12).setLabel("Nickname:"));
+        elements.add(CheckBox.construct("Active", false).setLabel("Active"));
+        elements.add(CheckBox.construct("Active", false).setLabel("Active"));
+        elements.add(CheckBox.construct("Active", false).setLabel("Active"));
+        elements.add(CheckBox.construct("Active", false).setLabel("Active"));
+        elements.add(CheckBox.construct("Active", false).setLabel("Active"));
     }
 
     @Override

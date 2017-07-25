@@ -4,7 +4,6 @@ import me.dmillerw.io.block.tile.TileGateContainer;
 import me.dmillerw.io.circuit.data.DataType;
 import me.dmillerw.io.circuit.gate.BaseGate;
 import me.dmillerw.io.client.gui.config.element.Element;
-import me.dmillerw.io.client.gui.config.element.Label;
 import me.dmillerw.io.client.gui.config.element.data.TextField;
 
 import java.util.LinkedList;

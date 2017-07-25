@@ -76,14 +76,16 @@ public class TextField extends ElementWithValue<String> {
 
     @Override
     public boolean onMouseClick(int mouseX, int mouseY, int mouseButton) {
+        backingElement.x += (modifier + 5);
         boolean result = backingElement.mouseClicked(mouseX, mouseY, mouseButton);
+        backingElement.x -= (modifier + 5);
         return result && backingElement.isFocused();
     }
 
     @Override
     public void draw(int mouseX, int mouseY, float partialTicks) {
         FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
-        fontRenderer.drawStringWithShadow(label, backingElement.x, backingElement.y + getHeight() - 9, 0xFFFFFF);
+        fontRenderer.drawString(label, backingElement.x, backingElement.y + getHeight() - 9, 4210752);
 
         backingElement.x += (modifier + 5);
         backingElement.drawTextBox();

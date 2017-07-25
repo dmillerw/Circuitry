@@ -4,6 +4,7 @@ import me.dmillerw.io.client.gui.config.GuiConfig;
 import me.dmillerw.io.lib.cls.IntTuple;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * @author dmillerw
@@ -23,6 +24,10 @@ public abstract class Element {
     public boolean onKeyTyped(int keycode, char key) { return false; }
     public void draw(int mouseX, int mouseY, float partialTicks) {}
 
-    public static Minecraft mc() { return Minecraft.getMinecraft(); }
-    public static FontRenderer fontRenderer() { return mc().fontRenderer; }
+    // Helper methods
+    protected static Minecraft mc() { return Minecraft.getMinecraft(); }
+    protected static FontRenderer fontRenderer() { return mc().fontRenderer; }
+    protected static void bindTexture(ResourceLocation resourceLocation) {
+        mc().getTextureManager().bindTexture(resourceLocation);
+    }
 }
