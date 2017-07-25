@@ -43,7 +43,7 @@ public class CUpdateConfig implements IMessage {
                     World world = mc.world;
                     TileEntity tile = world.getTileEntity(message.target);
                     if (tile != null && tile instanceof IConfigurable)
-                        ((IConfigurable) tile).handleUpdate(message.tag);
+                        ((IConfigurable) tile).onConfigurationUpdate(message.tag);
                 }
             });
             return null;

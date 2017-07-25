@@ -1,6 +1,9 @@
 package me.dmillerw.io.circuit.gate;
 
 import me.dmillerw.io.block.tile.TileGateContainer;
+import me.dmillerw.io.client.gui.config.element.Element;
+
+import java.util.LinkedList;
 
 /**
  * @author dmillerw
@@ -33,6 +36,8 @@ public abstract class BaseGate {
     public final Category getCategory() {
         return category;
     }
+
+    public void addElements(LinkedList<Element> elements) {}
 
     public abstract void initialize(TileGateContainer parentTile);
 

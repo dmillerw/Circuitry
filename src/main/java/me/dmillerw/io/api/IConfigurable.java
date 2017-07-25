@@ -16,5 +16,5 @@ public interface IConfigurable {
     public void getElements(LinkedList<Element> elements);
 
     public NBTTagCompound getConfiguration();
-    public void handleUpdate(NBTTagCompound tag);
+    public void onConfigurationUpdate(NBTTagCompound tag);
 }

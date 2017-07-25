@@ -102,7 +102,7 @@ public class GuiConfig extends GuiScreen {
         }
 
         final int[] height = {0};
-        elements.forEach((e) -> height[0] += e.getHeight());
+        elements.forEach((e) -> height[0] += e.getHeight() + 4);
         this.totalHeight = height[0];
 
         if (totalHeight > ACTUAL_CONFIG_AREA_HEIGHT)
@@ -117,7 +117,7 @@ public class GuiConfig extends GuiScreen {
         final int[] yPos = {guiTop + CONFIG_AREA_Y + VERTICAL_MARGIN - scrollingIndex};
         elements.forEach((e) -> {
             e.setPosition(guiLeft + CONFIG_AREA_X + HORIZONTAL_MARGIN, yPos[0]);
-            yPos[0] += e.getHeight();
+            yPos[0] += e.getHeight() + 4;
         });
     }
 

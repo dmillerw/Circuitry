@@ -4,7 +4,10 @@ import me.dmillerw.io.block.tile.core.TileToolContainer;
 import me.dmillerw.io.circuit.data.Value;
 import me.dmillerw.io.circuit.gate.BaseGate;
 import me.dmillerw.io.circuit.gate.GateRegistry;
+import me.dmillerw.io.client.gui.config.element.Element;
 import net.minecraft.nbt.NBTTagCompound;
+
+import java.util.LinkedList;
 
 /**
  * @author dmillerw
@@ -69,6 +72,26 @@ public class TileGateContainer extends TileToolContainer {
     public void onInputChange(String port, Value value) {
         super.onInputChange(port, value);
 
+        if (gate == null || gate.isEmpty())
+            throw new RuntimeException();
+
+        BaseGate gate = GateRegistry.INSTANCE.getGate(this.gate);
+        gate.calculateOutput(this);
+    }
+
+    @Override
+    public void getElements(LinkedList<Element> elements) {
+        super.getElements(elements);
+
+        if (gate == null || gate.isEmpty())
+            throw new RuntimeException();
+
+        BaseGate gate = GateRegistry.INSTANCE.getGate(this.gate);
+        gate.addElements(elements);
+    }
+
+    @Override
+    public void onConfigurationUpdate() {
         if (gate == null || gate.isEmpty())
             throw new RuntimeException();
 

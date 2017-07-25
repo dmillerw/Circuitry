@@ -15,7 +15,7 @@ import java.util.List;
 public class Label extends Element {
 
     public static Label of(String label) {
-        return of(0xFFFFFFFF, label);
+        return of(4210752, label);
     }
 
     public static Label of(int textColor, String label) {

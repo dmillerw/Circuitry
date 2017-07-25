@@ -3,6 +3,11 @@ package me.dmillerw.io.circuit.gate.util;
 import me.dmillerw.io.block.tile.TileGateContainer;
 import me.dmillerw.io.circuit.data.DataType;
 import me.dmillerw.io.circuit.gate.BaseGate;
+import me.dmillerw.io.client.gui.config.element.Element;
+import me.dmillerw.io.client.gui.config.element.Label;
+import me.dmillerw.io.client.gui.config.element.data.TextField;
+
+import java.util.LinkedList;
 
 /**
  * @author dmillerw
@@ -19,7 +24,17 @@ public class GateConstantValue extends BaseGate {
     }
 
     @Override
+    public void addElements(LinkedList<Element> elements) {
+        elements.add(TextField.of("Value", 12).setLabel("Value"));
+    }
+
+    @Override
     public void calculateOutput(TileGateContainer parentTile) {
-        parentTile.updateOutput("Out", 60);
+        String value = parentTile.getConfiguration().getString("Value");
+        if (!value.isEmpty()) {
+            parentTile.updateOutput("Out", Double.parseDouble(value));
+        } else {
+            parentTile.updateOutput("Out", 0);
+        }
     }
 }

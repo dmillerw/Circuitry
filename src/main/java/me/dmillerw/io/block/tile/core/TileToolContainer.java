@@ -12,7 +12,6 @@ import me.dmillerw.io.circuit.data.Port;
 import me.dmillerw.io.circuit.data.Value;
 import me.dmillerw.io.circuit.grid.ConnectivityGrid;
 import me.dmillerw.io.client.gui.config.element.Element;
-import me.dmillerw.io.client.gui.config.element.Label;
 import me.dmillerw.io.client.gui.config.element.data.TextField;
 import me.dmillerw.io.network.PacketHandler;
 import me.dmillerw.io.network.packet.client.CAddListener;
@@ -459,21 +458,16 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
     @SideOnly(Side.CLIENT)
     @Override
     public void getElements(LinkedList<Element> elements) {
-        elements.add(Label.of(4210752, "Bacon ipsum dolor amet beef alcatra burgdoggen kielbasa. Chuck shank bacon biltong tri-tip frankfurter bresaola rump doner meatball tail ground round kevin brisket beef ribs. Swine turducken jowl, pastrami tongue pig chicken filet mignon turkey tenderloin venison bacon ground round. Corned beef drumstick turducken pork landjaeger turkey.\n" +
-                "\n" +
-                "Meatloaf andouille burgdoggen bacon. Jerky cow flank pig bresaola prosciutto venison. Kevin sirloin beef short loin ribeye. T-bone kielbasa prosciutto shoulder pork belly pork jowl tongue boudin chicken kevin tenderloin leberkas pastrami ground round. Sausage corned beef boudin cupim strip steak. Cupim t-bone pancetta, porchetta leberkas ham kielbasa ribeye shank hamburger filet mignon corned beef pork loin.\n" +
-                "\n" +
-                "Rump pastrami ribeye, beef turducken meatball doner shankle landjaeger corned beef kielbasa shank. Alcatra pork belly salami, pork chop leberkas ground round filet mignon shoulder chicken tenderloin. Sirloin doner shoulder leberkas picanha kevin. Pork chop kielbasa salami, pancetta pig jerky corned beef venison landjaeger fatback kevin pork loin bacon. Alcatra flank corned beef pork. Boudin landjaeger venison, short loin ground round pig burgdoggen fatback bacon bresaola alcatra ribeye shoulder.").setMultiline());
         elements.add(TextField.of("Nickname", 12).setLabel("Nickname:"));
     }
 
     @Override
-    public NBTTagCompound getConfiguration() {
+    public final NBTTagCompound getConfiguration() {
         return config;
     }
 
     @Override
-    public void handleUpdate(NBTTagCompound tag) {
+    public final void onConfigurationUpdate(NBTTagCompound tag) {
         for (String key : tag.getKeySet())
             this.config.setTag(key, tag.getTag(key));
 
@@ -484,5 +478,9 @@ public abstract class TileToolContainer extends TileCore implements ITickable, I
 
             PacketHandler.sendToAllWatching(packet, this);
         }
+
+        onConfigurationUpdate();
     }
+
+    public void onConfigurationUpdate() {}
 }
